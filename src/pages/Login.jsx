@@ -19,9 +19,11 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [loginData, setLoginData] = useState({
-    login: "",
+    login: "",  
     password: "",
   });
+
+  // -------------------------------------------
 
   //handleChange function to updaet the state when user types in input
   const handleChange = (e) => {
@@ -58,10 +60,26 @@ const Login = () => {
   };
 
   return (
+
+    <Box
+          sx={{
+            minHeight: "100vh",
+            width: "100vw",
+            backgroundImage:
+              "url('https://img.magnific.com/vector-gratis/fondo-futurista-degradado-geometrico_23-2149116406.jpg')", // Public folder wali image ya direct URL
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: -2,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -76,6 +94,10 @@ const Login = () => {
             alignItems: "center",
             width: "100%",
             borderRadius: 2,
+
+            backgroundColor: "rgba(255, 255, 255, 0.07)", 
+          backdropFilter: "blur(10px)",
+          boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.2)",
           }}
         >
           <Typography
@@ -126,7 +148,7 @@ const Login = () => {
             </Button>
 
             { error && (
-              <Alert severity="error" sx={{ mb: 2 ,  color:"red", backgroundColor:"black", border:"1px solid red"}}>
+              <Alert severity="error" sx={{ mb: 2 ,  color:"white", backgroundColor:"black", border:"1px solid red"}}>
                 {error}
               </Alert>
             )}
@@ -147,6 +169,7 @@ const Login = () => {
         </Paper>
       </Box>
     </Container>
+    </Box>
   );
 };
 

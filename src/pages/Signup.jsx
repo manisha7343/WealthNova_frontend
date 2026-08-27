@@ -8,6 +8,10 @@ import {
   Grid,
   Link,
   Alert,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormControl,
 } from "@mui/material";
 
 import axios from "axios";
@@ -16,7 +20,7 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate;
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [signupData, setSignupData] = useState({
     fullName: "",
@@ -37,9 +41,9 @@ const Signup = () => {
     e.preventDefault();
 
     //----------------- validations -----------------------------------
-    const { fullName, userName, email, password } = signupData;
+    const { fullName, userName, email, password, country } = signupData;
 
-    if (!fullName || !userName || !email || !password) {
+    if (!fullName || !userName || !email || !password || !country) {
       setError("All fields are required!");
       return;
     }
@@ -64,6 +68,11 @@ const Signup = () => {
       );
       return;
     }
+
+    if (!country) {
+      setError("Please select country");
+      return;
+    }
     // -----------------------------------------------------------------------
 
     try {
@@ -79,7 +88,7 @@ const Signup = () => {
       }
     } catch (error) {
       console.log("Error:", error.response?.data || error.message);
-      setError(error.response?.data?.message || "Invalid Creadentials");
+      setError(error.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -88,40 +97,54 @@ const Signup = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Paper
-          elevation={3}
+    <Box
+      sx={{
+        minHeight: "100vh",
+        width: "100vw",
+        backgroundImage:
+          "url('https://img.magnific.com/premium-photo/beautiful-illustration-with-smoke-colorful-background_265989-17893.jpg?semt=ais_hybrid&w=740&q=80')", // Public folder wali image ya direct URL
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Container component="main" maxWidth="xs">
+        <Box
           sx={{
-            padding: 4,
+            marginTop: 5,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            width: "100%",
-            borderRadius: 2,
           }}
         >
-          {/* Heading */}
-
-          <Typography
-            component="h1"
-            variant="h5"
+          <Paper
+            elevation={3}
             sx={{
-              fontWeight: "bold",
-              mb: 1,
+              padding: 4,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "100%",
+              borderRadius: 2,
             }}
           >
-            Create Account
-          </Typography>
+            {/* Heading */}
 
-          {/* <Typography
+            <Typography
+              component="h1"
+              variant="h5"
+              sx={{
+                fontWeight: "bold",
+                mb: 1,
+              }}
+            >
+              Create Account
+            </Typography>
+
+            {/* <Typography
             variant="h6"
             sx={{
               fontWeight: 600,
@@ -132,7 +155,7 @@ const Signup = () => {
            WealthNova 
           </Typography> */}
 
-          {/* <Typography
+            {/* <Typography
             variant="body2"
             color="text.secondary"
             align="center"
@@ -141,119 +164,147 @@ const Signup = () => {
           _____________________________
           </Typography> */}
 
-          {/* Form ------------------------------------------*/}
+            {/* Form ------------------------------------------*/}
 
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ mt: 1, width: "100%" }}
-          >
-            {/* Full Name */}
-
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Full Name"
-              name="fullName"
-              value={signupData.fullName}
-              onChange={handleChange}
-              autoFocus
-            />
-
-            {/* Username */}
-
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Username"
-              name="userName"
-              value={signupData.userName}
-              onChange={handleChange}
-            />
-
-            {/* Email */}
-
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Email Address"
-              name="email"
-              type="email"
-              value={signupData.email}
-              onChange={handleChange}
-            />
-
-            {/* Password */}
-
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Password"
-              name="password"
-              type="password"
-              value={signupData.password}
-              onChange={handleChange}
-            />
-
-            {/* Signup Button */}
-
-            <Button
-              type="submit"
-              fullWidth
-              // onClick={() => navigate("/home")}
-              variant="contained"
-              size="large"
-              sx={{ mt: 3, mb: 2, borderRadius: 1.5 }}
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              sx={{ mt: 1, width: "100%" }}
             >
-              {loading ? "SigUP ..." : "sigUp"}
-            </Button>
+              {/* Full Name */}
 
-            {error && (
-              <Alert
-                severity="error"
-                sx={{
-                  mb: 2,
-                  color: "red",
-                  backgroundColor: "black Transperant",
-                  border: "1px solid red",
-                }}
-              >
-                {error}
-              </Alert>
-            )}
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Full Name"
+                name="fullName"
+                value={signupData.fullName}
+                onChange={handleChange}
+              />
 
-            {/* Login */}
+              {/* Username */}
 
-            <Grid container sx={{ mt: 1, justifyContent: "center" }}>
-              <Grid>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  align="center"
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Username"
+                name="userName"
+                value={signupData.userName}
+                onChange={handleChange}
+              />
+
+              {/* Email */}
+
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Email Address"
+                name="email"
+                type="email"
+                value={signupData.email}
+                onChange={handleChange}
+              />
+
+              {/* Password */}
+
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Password"
+                name="password"
+                type="password"
+                value={signupData.password}
+                onChange={handleChange}
+              />
+
+              {/* country */}
+
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="country-select-label">Country</InputLabel>
+                <Select
+                  labelId="country-select-label"
+                  id="country-select"
+                  value={signupData.country}
+                  label="Country"
+                  onChange={handleChange}
                 >
-                  Already have an account?{" "}
-                  <Link
-                    component={RouterLink}
-                    to="/login"
+                  <MenuItem value="India">India</MenuItem>
+                  <MenuItem value="United Kingdom">United Kingdom</MenuItem>
+                  <MenuItem value="Nagaland">Nagaland</MenuItem>
+                  <MenuItem value="Canada">Canada</MenuItem>
+                  <MenuItem value="Australia">Australia</MenuItem>
+                </Select>
+              </FormControl>
+
+              {/* <TextField
+              margin="normal"
+              required
+              fullWidth
+              label="Country"
+              name="country"
+              value={signupData.country}
+              onChange={handleChange}
+            /> */}
+
+              {/* Signup Button */}
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                size="large"
+                sx={{ mt: 3, mb: 2, borderRadius: 1.5 }}
+              >
+                {loading ? "SigUP ..." : "sigUp"}
+              </Button>
+
+              {error && (
+                <Alert
+                  severity="error"
+                  sx={{
+                    mb: 2,
+                    color: "white",
+                    backgroundColor: "black",
+                    border: "1px solid red",
+                  }}
+                >
+                  {error}
+                </Alert>
+              )}
+
+              {/* Login */}
+
+              <Grid container sx={{ mt: 1, justifyContent: "center" }}>
+                <Grid>
+                  <Typography
                     variant="body2"
-                    underline="hover"
-                    sx={{
-                      fontWeight: "bold",
-                    }}
+                    color="text.secondary"
+                    align="center"
                   >
-                    Login
-                  </Link>
-                </Typography>
+                    Already have an account?{" "}
+                    <Link
+                      component={RouterLink}
+                      to="/login"
+                      variant="body2"
+                      underline="hover"
+                      sx={{
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Login
+                    </Link>
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
-          </Box>
-        </Paper>
-      </Box>
-    </Container>
+            </Box>
+          </Paper>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 
