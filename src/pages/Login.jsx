@@ -50,7 +50,10 @@ const Login = () => {
 
       localStorage.setItem("token", token);
       console.log("Login successfully");
-      navigate("/home");
+      
+      if(response.data.success ){
+        navigate("/home");
+      }
     } catch (error) {
       console.log("Error:", error.response?.data || error.message);
       setError(error.response?.data?.message || "Invalid Creadentials");
@@ -66,7 +69,7 @@ const Login = () => {
             minHeight: "100vh",
             width: "100vw",
             backgroundImage:
-              "url('https://img.magnific.com/vector-gratis/fondo-futurista-degradado-geometrico_23-2149116406.jpg')", // Public folder wali image ya direct URL
+              "url('https://img.magnific.com/premium-photo/beautiful-illustration-with-smoke-colorful-background_265989-17893.jpg?semt=ais_hybrid&w=740&q=80')", // Public folder wali image ya direct URL
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -95,7 +98,7 @@ const Login = () => {
             width: "100%",
             borderRadius: 2,
 
-            backgroundColor: "rgba(255, 255, 255, 0.07)", 
+            backgroundColor: "rgba(4, 2, 7, 0.75)", 
           backdropFilter: "blur(10px)",
           boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.2)",
           }}

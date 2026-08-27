@@ -129,6 +129,10 @@ const Signup = () => {
               alignItems: "center",
               width: "100%",
               borderRadius: 2,
+
+          backgroundColor: "rgba(4, 2, 7, 0.75)", 
+          backdropFilter: "blur(10px)",
+          boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.2)",
             }}
           >
             {/* Heading */}
