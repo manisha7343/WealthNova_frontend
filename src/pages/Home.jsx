@@ -1,9 +1,20 @@
 import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { MenuOutlined } from "@mui/icons-material";
+
+// -----------------
+// import profile from "./Profile"
+//-----icons ----------
+import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
+import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
+import DvrRoundedIcon from '@mui/icons-material/DvrRounded';
+import CurrencyExchangeRoundedIcon from '@mui/icons-material/CurrencyExchangeRounded';
+import CalculateRoundedIcon from '@mui/icons-material/CalculateRounded';
+// --------------------
 import {
   Box,
   Drawer,
+  // TextField,
   AppBar,
   Toolbar,
   Typography,
@@ -28,16 +39,15 @@ function Home() {
   const location = useLocation();
 
   const { mode, toggleColorMode } = useColorMode();
-
   const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const menuItems = [
-    { text: "Dashboard", path: "/home/dashboard", icon: "📊" },
-    { text: "Profile", path: "/home/profile", icon: "👤" },
-    { text: "Watchlist", path: "/home/watchlist", icon: "💼" },
-    { text: "Portfolio", path: "/home/portfolio", icon: "🌐" },
-    { text: "Calculator", path: "/home/calculator", icon: "🧮" },
+    { text: "Dashboard", path: "/home/dashboard", icon: <SpaceDashboardIcon /> },
+    { text: "Profile", path: "/home/profile", icon: <AccountBoxRoundedIcon />},
+    { text: "Watchlist", path: "/home/watchlist", icon: <DvrRoundedIcon /> },
+    { text: "Portfolio", path: "/home/portfolio", icon: <CurrencyExchangeRoundedIcon /> },
+    { text: "Calculator", path: "/home/calculator", icon: <CalculateRoundedIcon /> },
   ];
 
   const handleDrawerToggle = () => setOpen(!open);
@@ -46,6 +56,7 @@ function Home() {
 
   const handleLogout = () => {
     handleMenuClose();
+    // localStorage.removeItem("token");
     navigate("/login");
   };
 
@@ -87,11 +98,16 @@ function Home() {
               variant="h6"
               noWrap
               component="div"
-              sx={{ fontWeight: "bold" }}
+              sx={{ fontWeight: "bold", color:"#9dcbf9"}}
             >
               WealthNova Workspace
+
+             
+
             </Typography>
+             
           </Box>
+          {/* <TextField label="fullWidth" id="fullWidth" /> */}
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <IconButton onClick={toggleColorMode} color="inherit">
@@ -115,8 +131,9 @@ function Home() {
                   navigate("/home/profile");
                 }}
               >
-                Profile
+                Profile 
               </MenuItem>
+
               <Divider />
               <MenuItem onClick={handleLogout} sx={{ color: "error.main" }}>
                 Logout
