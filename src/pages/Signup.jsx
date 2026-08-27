@@ -7,21 +7,23 @@ import {
   Paper,
   Grid,
   Link,
+  Alert,
 } from "@mui/material";
 
-import axios from "axios"
+import axios from "axios";
 import { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const [loading, setLoading] = (false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate;
+  const [error, setError] = useState("");
   const [signupData, setSignupData] = useState({
     fullName: "",
     userName: "",
     email: "",
     password: "",
-    country:"",
+    country: "",
   });
 
   const handleChange = (e) => {
@@ -31,31 +33,58 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
 
-    try{
+    //----------------- validations -----------------------------------
+    const { fullName, userName, email, password } = signupData;
 
-     const response = await axios.post("http://localhost:3002/api/auth/register", signupData);
+    if (!fullName || !userName || !email || !password) {
+      setError("All fields are required!");
+      return;
+    }
+
+    if (fullName.trim().length < 2 || fullName.trim().length > 40) {
+      setError("Full name must be between 2 and 40 characters.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address!");
+      return;
+    }
+
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      setError(
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)",
+      );
+      return;
+    }
+    // -----------------------------------------------------------------------
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        "http://localhost:3002/api/auth/register",
+        signupData,
+      );
       console.log("Response Data:", response.data);
 
-      if(response.data.success){
-        navigate("/login")
+      if (response.data.success) {
+        navigate("/login");
       }
-    }catch(error){
-      console.log("Error:", error.response?.data || error.message ) ;
-      alert(error.response?.data?.message || "Signup failed!");
-    }finally{
-      setLoading(false)
+    } catch (error) {
+      console.log("Error:", error.response?.data || error.message);
+      setError(error.response?.data?.message || "Invalid Creadentials");
+    } finally {
+      setLoading(false);
     }
-   
-    
-
-
 
     console.log("Signup Data:", signupData);
-
   };
 
   return (
@@ -89,7 +118,6 @@ const Signup = () => {
               mb: 1,
             }}
           >
-            
             Create Account
           </Typography>
 
@@ -118,14 +146,7 @@ const Signup = () => {
           <Box
             component="form"
             onSubmit={handleSubmit}
-            sx={{
-              mt: 1,
-              width: "100%",
-
-              "& .MuiInputBase-input": {
-                color: "black",
-              },
-            }}
+            sx={{ mt: 1, width: "100%" }}
           >
             {/* Full Name */}
 
@@ -183,32 +204,38 @@ const Signup = () => {
             <Button
               type="submit"
               fullWidth
+              // onClick={() => navigate("/home")}
               variant="contained"
               size="large"
-              sx={{
-                mt: 3,
-                mb: 2,
-                borderRadius: 1.5,
-              }}
+              sx={{ mt: 3, mb: 2, borderRadius: 1.5 }}
             >
-              {loading ? "Signning in ..." : "signIn"}
+              {loading ? "SigUP ..." : "sigUp"}
             </Button>
+
+            {error && (
+              <Alert
+                severity="error"
+                sx={{
+                  mb: 2,
+                  color: "red",
+                  backgroundColor: "black Transperant",
+                  border: "1px solid red",
+                }}
+              >
+                {error}
+              </Alert>
+            )}
 
             {/* Login */}
 
-            <Grid
-              container
-              justifyContent="center"
-              sx={{ mt: 1 }}
-            >
-              <Grid item>
+            <Grid container sx={{ mt: 1, justifyContent: "center" }}>
+              <Grid>
                 <Typography
                   variant="body2"
                   color="text.secondary"
                   align="center"
                 >
                   Already have an account?{" "}
-
                   <Link
                     component={RouterLink}
                     to="/login"

@@ -6,8 +6,8 @@ import {
   Button,
   Paper,
   Link,
+  Alert
 } from "@mui/material";
-
 
 import { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [loginData, setLoginData] = useState({
     login: "",
     password: "",
@@ -34,6 +35,7 @@ const Login = () => {
     e.preventDefault();
     console.log("Login Data:", loginData);
 
+
     try {
       setLoading(true);
       const response = await axios.post(
@@ -49,6 +51,7 @@ const Login = () => {
       navigate("/home");
     } catch (error) {
       console.log("Error:", error.response?.data || error.message);
+      setError(error.response?.data?.message || "Invalid Creadentials");
     } finally {
       setLoading(false);
     }
@@ -119,9 +122,14 @@ const Login = () => {
               size="large"
               sx={{ mt: 3, mb: 2, borderRadius: 1.5 }}
             >
-            
               {loading ? "Loggin in... " : "Login"}
             </Button>
+
+            { error && (
+              <Alert severity="error" sx={{ mb: 2 ,  color:"red", backgroundColor:"black", border:"1px solid red"}}>
+                {error}
+              </Alert>
+            )}
 
             <Typography variant="body2" color="text.secondary" align="center">
               Don't have an account?{" "}
