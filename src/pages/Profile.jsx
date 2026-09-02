@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useRef, useEffect } from "react";
 import {
   Box,
   Paper,
@@ -7,9 +6,11 @@ import {
   Avatar,
   Button,
   TextField,
+  MenuItem,
   Grid,
   Divider,
   Alert,
+  Snackbar,
   CircularProgress,
   Dialog,
   DialogTitle,
@@ -18,89 +19,124 @@ import {
   DialogActions,
   IconButton,
   Stack,
-  Card,
-  CardContent,
+  Chip,
+  InputAdornment,
+  Skeleton,
+  Tooltip,
 } from "@mui/material";
 import {
   PhotoCamera,
   Edit,
   Save,
-  Cancel,
+  Close,
   LockReset,
   DeleteForever,
-  Person,
-  Email,
-  Phone,
+  Public,
+  Visibility,
+  VisibilityOff,
+  Lock,
+  Badge,
+  AlternateEmail,
+  WarningAmber,
 } from "@mui/icons-material";
+import axios from "axios";
 
-// Backend API Base URLs configuration
-const API_URL = "http://localhost:3002/api/user";
-// Custom Helper Chip Component
-const ChipTag = ({ label }) => (
-  <Box
-    sx={{
-      display: "inline-block",
-      bgcolor: "primary.light",
-      color: "primary.contrastText",
-      px: 1.5,
-      py: 0.5,
-      borderRadius: 10,
-      fontSize: "0.75rem",
-      fontWeight: "bold",
+// ---- axios instance (auto-attaches token, auto-logout on 401) ----
+// ⚠️ Check this against your actual routes file. Your backend controller
+// comments reference /api/users/uploadProfilePic (plural "users") — make
+// sure BASE_URL below matches exactly, or every call will 404.
+const BASE_URL = "http://localhost:3002/api/user";
+
+const axiosInstance = axios.create({ baseURL: BASE_URL });
+
+axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
+// ---- brand tokens (finance / trading feel — deep navy + brass gold) ----
+const NAVY = "#59c0e6";
+const NAVY_DARK = "#071427";
+const GOLD = "#C9A227";
+
+const COUNTRIES = [
+  "India", "United States", "United Kingdom", "United Arab Emirates",
+  "Singapore", "Canada", "Australia", "Germany", "France", "Japan", "Other",
+];
+
+// Small reusable "read-only" field so locked fields look intentional,
+// not just greyed-out disabled inputs.
+const LockedField = ({ label, value, icon }) => (
+  <TextField
+    fullWidth
+    label={label}
+    value={value || "—"}
+    disabled
+    InputProps={{
+      startAdornment: (
+        <InputAdornment position="start">{icon}</InputAdornment>
+      ),
     }}
-  >
-    {label}
-  </Box>
+    sx={{
+      "& .MuiInputBase-input.Mui-disabled": {
+        WebkitTextFillColor: "rgba(245, 240, 240, 0.9)",
+      },
+    }}
+  />
 );
 
 function Profile() {
-  // --- States ---
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    role: "Trader",
-    avatar: "",
-  });
+  const fileInputRef = useRef(null);
+
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editFormData, setEditFormData] = useState({ name: "", phone: "" });
+  const [editFormData, setEditFormData] = useState({ fullName: "", country: "" });
+  const [savingProfile, setSavingProfile] = useState(false);
+
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   const [passwordData, setPasswordData] = useState({
     oldPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
+  const [showPw, setShowPw] = useState({ old: false, next: false, confirm: false });
+  const [changingPassword, setChangingPassword] = useState(false);
 
-  const [loading, setLoading] = useState(true);
-  const [actionLoading, setActionLoading] = useState(false);
-  const [message, setMessage] = useState({ type: "", text: "" });
-
-  // Delete Dialog state
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
-  // Authorization Header Utility
-  const getAuthHeader = () => {
-    const token = localStorage.getItem("token");
-    return { headers: { Authorization: `Bearer ${token}` } };
-  };
+  const [toast, setToast] = useState({ open: false, type: "success", text: "" });
+  const notify = (type, text) => setToast({ open: true, type, text });
 
-  // --- 1. GET PROFILE DATA ---
+  // ---------------- 1. GET PROFILE ----------------
   const fetchProfile = async () => {
     setLoading(true);
+    setLoadError("");
     try {
-      const response = await axios.get(
-        `${API_URL}/getProfile`,
-        getAuthHeader()
-      );
-      const data = response.data?.user || response.data;
+      const res = await axiosInstance.get("/getProfile");
+      const data = res.data?.user || res.data;
       setUser(data);
-      setEditFormData({ name: data.name || "", phone: data.phone || "" });
+      setEditFormData({ fullName: data.fullName || "", country: data.country || "" });
     } catch (err) {
-      setMessage({
-        type: "error",
-        text: err.response?.data?.message || "Failed to load profile details.",
-      });
+      setLoadError(err.response?.data?.message || "Failed to load profile details.");
     } finally {
       setLoading(false);
     }
@@ -111,265 +147,259 @@ function Profile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // --- 2. UPDATE PROFILE DETAILS ---
+  // ---------------- 2. UPDATE PROFILE (fullName + country only — that's all the backend accepts) ----------------
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
-    setActionLoading(true);
-    setMessage({ type: "", text: "" });
-
+    setSavingProfile(true);
     try {
-      const response = await axios.put(
-        `${API_URL}/updateProfile`,
-        editFormData,
-        getAuthHeader()
-      );
+      const res = await axiosInstance.put("/updateProfile", {
+        fullName: editFormData.fullName,
+        country: editFormData.country,
+      });
       setUser((prev) => ({ ...prev, ...editFormData }));
       setIsEditing(false);
-      setMessage({
-        type: "success",
-        text: response.data?.message || "Profile updated successfully!",
-      });
+      notify("success", res.data?.message || "Profile updated successfully!");
     } catch (err) {
-      setMessage({
-        type: "error",
-        text: err.response?.data?.message || "Failed to update profile.",
-      });
+      notify("error", err.response?.data?.message || "Failed to update profile.");
     } finally {
-      setActionLoading(false);
+      setSavingProfile(false);
     }
   };
 
-  // --- 3. UPLOAD PROFILE PICTURE ---
+  // ---------------- 3. UPLOAD PROFILE PICTURE ----------------
   const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append("avatar", file);
-
-    setActionLoading(true);
-    setMessage({ type: "", text: "" });
-
-    try {
-      const response = await axios.put(
-        `${API_URL}/uploadProfilePic`, // ya upload avatar endpoint
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      setUser((prev) => ({
-        ...prev,
-        avatar: response.data.avatarUrl || URL.createObjectURL(file),
-      }));
-      setMessage({
-        type: "success",
-        text: "Profile picture updated successfully!",
-      });
-    } catch (err) {
-      setMessage({
-        type: "error",
-        text: err.response?.data?.message || "Failed to upload image.",
-      });
-    } finally {
-      setActionLoading(false);
+    if (!file.type.startsWith("image/")) {
+      notify("error", "Please choose an image file.");
+      return;
     }
-  };
-
-  // --- 4. CHANGE PASSWORD ---
-  const handleChangePassword = async (e) => {
-    e.preventDefault();
-    setMessage({ type: "", text: "" });
-
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setMessage({ type: "error", text: "New passwords do not match!" });
+    if (file.size > 5 * 1024 * 1024) {
+      notify("error", "Image must be smaller than 5MB.");
       return;
     }
 
-    setActionLoading(true);
-    try {
-      const response = await axios.put(
-        `${API_URL}/changePassword`,
-        {
-          oldPassword: passwordData.oldPassword,
-          newPassword: passwordData.newPassword,
-        },
-        getAuthHeader()
-      );
+    setAvatarPreview(URL.createObjectURL(file));
 
-      setMessage({
-        type: "success",
-        text: response.data?.message || "Password changed successfully!",
+    // Field name MUST be "profilePic" — that's the key your multer
+    // middleware reads with upload.single("profilePic") on the backend.
+    const formData = new FormData();
+    formData.append("profilePic", file);
+
+    setUploadingAvatar(true);
+    try {
+      const res = await axiosInstance.put("/uploadProfilePic", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-      setPasswordData({
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
+      setUser((prev) => ({ ...prev, profilePic: res.data.profilePic }));
+      notify("success", res.data?.message || "Profile picture updated successfully!");
     } catch (err) {
-      setMessage({
-        type: "error",
-        text: err.response?.data?.message || "Failed to change password.",
-      });
+      notify("error", err.response?.data?.message || "Failed to upload image.");
+      setAvatarPreview(null);
     } finally {
-      setActionLoading(false);
+      setUploadingAvatar(false);
     }
   };
 
-  // --- 5. DELETE PROFILE ---
-  const handleDeleteAccount = async () => {
-    setActionLoading(true);
+  // ---------------- 4. CHANGE PASSWORD ----------------
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      notify("error", "New passwords do not match!");
+      return;
+    }
+    if (passwordData.newPassword.length < 8) {
+      notify("error", "New password should be at least 8 characters.");
+      return;
+    }
+
+    setChangingPassword(true);
     try {
-      await axios.delete(`${API_URL}/deleteAccount`, getAuthHeader());
+      const res = await axiosInstance.put("/changePassword", {
+        oldPassword: passwordData.oldPassword,
+        newPassword: passwordData.newPassword,
+      });
+      notify("success", res.data?.message || "Password changed successfully!");
+      setPasswordData({ oldPassword: "", newPassword: "", confirmPassword: "" });
+    } catch (err) {
+      notify("error", err.response?.data?.message || "Failed to change password.");
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
+  // ---------------- 5. DELETE ACCOUNT ----------------
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      await axiosInstance.delete("/deleteAccount");
       localStorage.removeItem("token");
       window.location.href = "/login";
     } catch (err) {
-      setMessage({
-        type: "error",
-        text: err.response?.data?.message || "Failed to delete account.",
-      });
-      setOpenDeleteDialog(false);
-    } finally {
-      setActionLoading(false);
+      notify("error", err.response?.data?.message || "Failed to delete account.");
+      setDeleting(false);
     }
   };
 
+  // ---------------- loading / error states ----------------
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "60vh",
-        }}
-      >
-        <CircularProgress />
+      <Box sx={{ maxWidth: 1000, mx: "auto", p: { xs: 2, md: 3 } }}>
+        <Skeleton variant="rounded" height={160} sx={{ mb: 3, borderRadius: 3 }} />
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={4}>
+            <Skeleton variant="rounded" height={340} sx={{ borderRadius: 3 }} />
+          </Grid>
+          <Grid item xs={12} md={8}>
+            <Skeleton variant="rounded" height={340} sx={{ borderRadius: 3 }} />
+          </Grid>
+        </Grid>
+      </Box>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <Box sx={{ maxWidth: 600, mx: "auto", mt: 8, p: 2 }}>
+        <Alert severity="error" variant="outlined">{loadError}</Alert>
+        <Button sx={{ mt: 2 }} variant="contained" onClick={fetchProfile}>
+          Try again
+        </Button>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ maxWidth: 1000, margin: "0 auto", p: 1 }}>
-      {/* Alert Notification */}
-      {message.text && (
-        <Alert
-          severity={message.type}
-          onClose={() => setMessage({ type: "", text: "" })}
-          sx={{ mb: 3 }}
+    <Box sx={{ maxWidth: 1000, mx: "auto", p: { xs: 1.5, md: 3 } }}>
+      {/* -------- Hero banner + floating avatar -------- */}
+      <Box
+        sx={{
+          position: "relative",
+          borderRadius: 4,
+          height: 140,
+          mb: 8,
+          background: `linear-gradient(120deg, ${NAVY_DARK} 0%, ${NAVY} 55%, #14315c 100%)`,
+          overflow: "visible",
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            left: { xs: "50%", sm: 32 },
+            bottom: -56,
+            transform: { xs: "translateX(-50%)", sm: "none" },
+          }}
         >
-          {message.text}
-        </Alert>
-      )}
+          <Box sx={{ position: "relative", display: "inline-block" }}>
+            <Avatar
+              src={avatarPreview || user.profilePic}
+              sx={{
+                width: 112,
+                height: 112,
+                border: "4px solid #ebdede",
+                boxShadow: 3,
+                bgcolor: GOLD,
+                color: NAVY_DARK,
+                fontSize: "2.25rem",
+                fontWeight: 700,
+              }}
+            >
+              {user.fullName ? user.fullName.charAt(0).toUpperCase() : "U"}
+            </Avatar>
 
-      <Grid container spacing={3}>
-        {/* Left Side: Profile Summary Card */}
-        <Grid xs={12} md={4}>
-          <Card
-            elevation={2}
-            sx={{ borderRadius: 3, textAlign: "center", p: 2 }}
-          >
-            <CardContent>
-              <Box
-                sx={{ position: "relative", display: "inline-block", mb: 2 }}
-              >
-                <Avatar
-                  src={user.avatar}
-                  sx={{
-                    width: 110,
-                    height: 110,
-                    margin: "0 auto",
-                    bgcolor: "primary.main",
-                    fontSize: "2.5rem",
-                  }}
-                >
-                  {user.name ? user.name.charAt(0).toUpperCase() : "U"}
-                </Avatar>
-
-                {/* Upload Photo Badge Button */}
-                <input
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  id="icon-button-file"
-                  type="file"
-                  onChange={handleAvatarChange}
-                />
-                <label htmlFor="icon-button-file">
-                  <IconButton
-                    color="primary"
-                    aria-label="upload picture"
-                    component="span"
-                    sx={{
-                      position: "absolute",
-                      bottom: 0,
-                      right: 0,
-                      bgcolor: "background.paper",
-                      boxShadow: 2,
-                      "&:hover": { bgcolor: "background.paper" },
-                    }}
-                  >
-                    <PhotoCamera fontSize="small" />
-                  </IconButton>
-                </label>
-              </Box>
-
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                {user.name || "User Name"}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                {user.email}
-              </Typography>
-
-              <ChipTag label={user.role || "Stock Trader"} />
-
-              <Divider sx={{ my: 2 }} />
-
-              <Stack spacing={1.5} sx={{ textAlign: "left" }}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Person color="action" fontSize="small" />
-                  <Typography variant="body2">{user.name}</Typography>
-                </Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Email color="action" fontSize="small" />
-                  <Typography variant="body2">{user.email}</Typography>
-                </Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Phone color="action" fontSize="small" />
-                  <Typography variant="body2">
-                    {user.phone || "Not Added"}
-                  </Typography>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Right Side: Edit Profile & Security Options */}
-        <Grid item xs={12} md={8}>
-          <Stack spacing={3}>
-            {/* 1. EDIT PROFILE SECTION */}
-            <Paper elevation={2} sx={{ p: 3, borderRadius: 3 }}>
+            {uploadingAvatar && (
               <Box
                 sx={{
+                  position: "absolute",
+                  inset: 0,
+                  borderRadius: "50%",
+                  bgcolor: "rgba(0,0,0,0.45)",
                   display: "flex",
-                  justifyContent: "space-between",
                   alignItems: "center",
-                  mb: 2,
+                  justifyContent: "center",
                 }}
               >
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                  Personal Information
+                <CircularProgress size={28} sx={{ color: "#040303" }} />
+              </Box>
+            )}
+
+            <input
+              ref={fileInputRef}
+              accept="image/*"
+              style={{ display: "none" }}
+              type="file"
+              onChange={handleAvatarChange}
+            />
+            <Tooltip title="Change photo">
+              <IconButton
+                size="small"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingAvatar}
+                sx={{
+                  position: "absolute",
+                  bottom: 2,
+                  right: 2,
+                  bgcolor: GOLD,
+                  color: NAVY_DARK,
+                  boxShadow: 2,
+                  "&:hover": { bgcolor: "   #b61fb8" },
+                }}
+              >
+                <PhotoCamera fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Box>
+
+      <Grid container spacing={3}>
+        {/* -------- Left: identity summary -------- */}
+        <Grid item xs={12} md={4}>
+          <Paper elevation={0} variant="outlined" sx={{ borderRadius: 3, p: 3, textAlign: "center" }}>
+            <Typography variant="h6" fontWeight={700}>
+              {user.fullName || "Unnamed User"}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              @{user.userName || "username"}
+            </Typography>
+
+            {user.country && (
+              <Chip
+                icon={<Public sx={{ fontSize: 16 }} />}
+                label={user.country}
+                size="small"
+                sx={{ mt: 1.5, bgcolor: `${NAVY}14`, color: NAVY, fontWeight: 600 }}
+              />
+            )}
+
+            <Divider sx={{ my: 2.5 }} />
+
+            <Stack spacing={2} sx={{ textAlign: "left" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
+                <AlternateEmail sx={{ fontSize: 20, color: "text.secondary" }} />
+                <Typography variant="body2" sx={{ wordBreak: "break-all" }}>
+                  {user.email}
                 </Typography>
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
+                <Badge sx={{ fontSize: 20, color: "text.secondary" }} />
+                <Typography variant="body2">{user.userName}</Typography>
+              </Box>
+            </Stack>
+          </Paper>
+        </Grid>
+
+        {/* -------- Right: edit + security + danger zone -------- */}
+        <Grid item xs={12} md={8}>
+          <Stack spacing={3}>
+            {/* Personal information */}
+            <Paper elevation={0} variant="outlined" sx={{ p: 3, borderRadius: 3 }}>
+              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+                <Typography variant="h6" fontWeight={700}>Personal Information</Typography>
                 {!isEditing && (
-                  <Button
-                    startIcon={<Edit />}
-                    variant="outlined"
-                    size="small"
-                    onClick={() => setIsEditing(true)}
-                  >
+                  <Button startIcon={<Edit />} size="small" onClick={() => setIsEditing(true)}>
                     Edit
                   </Button>
                 )}
@@ -382,61 +412,51 @@ function Profile() {
                       fullWidth
                       label="Full Name"
                       disabled={!isEditing}
-                      value={isEditing ? editFormData.name : user.name}
-                      onChange={(e) =>
-                        setEditFormData({
-                          ...editFormData,
-                          name: e.target.value,
-                        })
-                      }
+                      value={isEditing ? editFormData.fullName : user.fullName || ""}
+                      onChange={(e) => setEditFormData({ ...editFormData, fullName: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
-                      label="Phone Number"
+                      select
+                      label="Country"
                       disabled={!isEditing}
-                      value={isEditing ? editFormData.phone : user.phone}
-                      onChange={(e) =>
-                        setEditFormData({
-                          ...editFormData,
-                          phone: e.target.value,
-                        })
-                      }
-                    />
+                      value={isEditing ? editFormData.country : user.country || ""}
+                      onChange={(e) => setEditFormData({ ...editFormData, country: e.target.value })}
+                    >
+                      {COUNTRIES.map((c) => (
+                        <MenuItem key={c} value={c}>{c}</MenuItem>
+                      ))}
+                    </TextField>
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Email Address"
-                      disabled
-                      value={user.email}
-                      helperText="Email address cannot be changed."
-                    />
+
+                  <Grid item xs={12} sm={6}>
+                    <LockedField label="Username" value={user.userName} icon={<Badge fontSize="small" />} />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <LockedField label="Email Address" value={user.email} icon={<AlternateEmail fontSize="small" />} />
                   </Grid>
                 </Grid>
 
                 {isEditing && (
-                  <Box
-                    sx={{
-                      mt: 2,
-                      display: "flex",
-                      gap: 2,
-                      justifyContent: "flex-end",
-                    }}
-                  >
+                  <Box sx={{ mt: 2.5, display: "flex", gap: 1.5, justifyContent: "flex-end" }}>
                     <Button
-                      startIcon={<Cancel />}
+                      startIcon={<Close />}
                       color="inherit"
-                      onClick={() => setIsEditing(false)}
+                      onClick={() => {
+                        setIsEditing(false);
+                        setEditFormData({ fullName: user.fullName || "", country: user.country || "" });
+                      }}
                     >
                       Cancel
                     </Button>
                     <Button
                       type="submit"
                       variant="contained"
-                      startIcon={<Save />}
-                      disabled={actionLoading}
+                      startIcon={savingProfile ? <CircularProgress size={16} color="inherit" /> : <Save />}
+                      disabled={savingProfile}
+                      sx={{ bgcolor: NAVY, "&:hover": { bgcolor: NAVY_DARK } }}
                     >
                       Save Changes
                     </Button>
@@ -445,19 +465,10 @@ function Profile() {
               </Box>
             </Paper>
 
-            {/* 2. CHANGE PASSWORD SECTION */}
-            <Paper elevation={2} sx={{ p: 3, borderRadius: 3 }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: "bold",
-                  mb: 2,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                }}
-              >
-                <LockReset color="primary" /> Security & Password
+            {/* Security */}
+            <Paper elevation={0} variant="outlined" sx={{ p: 3, borderRadius: 3 }}>
+              <Typography variant="h6" fontWeight={700} sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}>
+                <LockReset sx={{ color: NAVY }} /> Security &amp; Password
               </Typography>
 
               <Box component="form" onSubmit={handleChangePassword}>
@@ -465,56 +476,76 @@ function Profile() {
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
-                      type="password"
+                      required
                       label="Current Password"
-                      required
+                      type={showPw.old ? "text" : "password"}
                       value={passwordData.oldPassword}
-                      onChange={(e) =>
-                        setPasswordData({
-                          ...passwordData,
-                          oldPassword: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setPasswordData({ ...passwordData, oldPassword: e.target.value })}
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start"><Lock fontSize="small" /></InputAdornment>,
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton onClick={() => setShowPw({ ...showPw, old: !showPw.old })} edge="end">
+                              {showPw.old ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
-                      type="password"
+                      required
                       label="New Password"
-                      required
+                      type={showPw.next ? "text" : "password"}
                       value={passwordData.newPassword}
-                      onChange={(e) =>
-                        setPasswordData({
-                          ...passwordData,
-                          newPassword: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton onClick={() => setShowPw({ ...showPw, next: !showPw.next })} edge="end">
+                              {showPw.next ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
-                      type="password"
-                      label="Confirm New Password"
                       required
+                      label="Confirm New Password"
+                      type={showPw.confirm ? "text" : "password"}
                       value={passwordData.confirmPassword}
-                      onChange={(e) =>
-                        setPasswordData({
-                          ...passwordData,
-                          confirmPassword: e.target.value,
-                        })
+                      error={!!passwordData.confirmPassword && passwordData.confirmPassword !== passwordData.newPassword}
+                      helperText={
+                        passwordData.confirmPassword && passwordData.confirmPassword !== passwordData.newPassword
+                          ? "Passwords don't match"
+                          : " "
                       }
+                      onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton onClick={() => setShowPw({ ...showPw, confirm: !showPw.confirm })} edge="end">
+                              {showPw.confirm ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Grid>
                 </Grid>
 
-                <Box sx={{ mt: 2, textAlign: "right" }}>
+                <Box sx={{ mt: 1, textAlign: "right" }}>
                   <Button
                     type="submit"
                     variant="contained"
-                    color="primary"
-                    disabled={actionLoading}
+                    disabled={changingPassword}
+                    startIcon={changingPassword ? <CircularProgress size={16} color="inherit" /> : null}
+                    sx={{ bgcolor: NAVY, "&:hover": { bgcolor: NAVY_DARK } }}
                   >
                     Update Password
                   </Button>
@@ -522,32 +553,21 @@ function Profile() {
               </Box>
             </Paper>
 
-            {/* 3. DANGER ZONE (DELETE ACCOUNT) */}
+            {/* Danger zone */}
             <Paper
-              elevation={2}
-              sx={{
-                p: 3,
-                borderRadius: 3,
-                border: "1px solid",
-                borderColor: "error.light",
-              }}
+              elevation={0}
+              sx={{ p: 3, borderRadius: 3, border: "1px solid", borderColor: "error.light", bgcolor: "#fff8f8" }}
             >
               <Typography
                 variant="h6"
-                sx={{
-                  fontWeight: "bold",
-                  color: "error.main",
-                  mb: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                }}
+                fontWeight={700}
+                color="error.main"
+                sx={{ mb: 1, display: "flex", alignItems: "center", gap: 1 }}
               >
                 <DeleteForever /> Danger Zone
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Once you delete your profile, all trading watchlist data and
-                account history will be permanently deleted.
+                Deleting your profile will permanently remove your account, watchlist data and trading history. This cannot be undone.
               </Typography>
               <Button
                 variant="outlined"
@@ -561,32 +581,51 @@ function Profile() {
         </Grid>
       </Grid>
 
-      {/* Confirmation Modal for Delete Account */}
-      <Dialog
-        open={openDeleteDialog}
-        onClose={() => setOpenDeleteDialog(false)}
-      >
-        <DialogTitle sx={{ color: "error.main", fontWeight: "bold" }}>
-          Delete Account Permanently?
+      {/* -------- Delete confirmation -------- */}
+      <Dialog open={openDeleteDialog} onClose={() => !deleting && setOpenDeleteDialog(false)} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, color: "error.main", fontWeight: 700 }}>
+          <WarningAmber /> Delete account permanently?
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Kya aap sure hain? Ye step reverse nahi ho sakta. Aapka saara
-            profile data erase ho jayega.
+          <DialogContentText sx={{ mb: 2 }}>
+            This step can't be reversed — your entire profile, watchlist and trading history will be erased for good.
+            Type <strong>DELETE</strong> below to confirm.
           </DialogContentText>
+          <TextField
+            fullWidth
+            size="small"
+            placeholder="Type DELETE to confirm"
+            value={deleteConfirmText}
+            onChange={(e) => setDeleteConfirmText(e.target.value)}
+          />
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button onClick={() => setOpenDeleteDialog(false)}>Cancel</Button>
+          <Button onClick={() => { setOpenDeleteDialog(false); setDeleteConfirmText(""); }} disabled={deleting}>
+            Cancel
+          </Button>
           <Button
             onClick={handleDeleteAccount}
             color="error"
             variant="contained"
-            disabled={actionLoading}
+            disabled={deleteConfirmText !== "DELETE" || deleting}
+            startIcon={deleting ? <CircularProgress size={16} color="inherit" /> : null}
           >
             Confirm Delete
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* -------- Toast -------- */}
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={4000}
+        onClose={() => setToast({ ...toast, open: false })}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert severity={toast.type} variant="filled" onClose={() => setToast({ ...toast, open: false })}>
+          {toast.text}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
