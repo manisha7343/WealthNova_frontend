@@ -60,6 +60,10 @@ export default function Calculators() {
     setTabIndex(newValue);
   };
 
+  // return (<>
+  //     <iframe src="https://dream-calc.netlify.app" style={{border:0, borderRadius:10, width:"100%", height:"100%", minHeight:"500px"}} ></iframe>
+  // </>)
+  
   return (
     <Box sx={{ width: "100%" }}>
       <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>

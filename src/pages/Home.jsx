@@ -79,7 +79,7 @@ function Home() {
           borderBottom: 1,
           borderColor: "divider",
           bgcolor: "background.paper",
-          color: "text.primary",
+          color: "#0b7ff3",
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -98,9 +98,15 @@ function Home() {
               variant="h6"
               noWrap
               component="div"
-              sx={{ fontWeight: "bold", color:"#9dcbf9"}}
+              sx={{ fontWeight: "bold", color:"#0b7ff3"}}
             >
-              WealthNova Workspace
+
+              𝙒𝙚𝙖𝙡𝙩𝙝𝙉𝙤𝙫𝙖
+             
+                
+                                     
+
+
 
              
 
@@ -227,11 +233,11 @@ function Home() {
         <Toolbar />
         <Box
           sx={{
-            bgcolor: "background.paper", // Automatic Light/Dark card background
+            // bgcolor: "background.paper", // Automatic Light/Dark card background
             color: "text.primary",
-            p: 3,
+            // p: 3,
             borderRadius: 2,
-            border: 1,
+            // border: 1,
             borderColor: "divider", // Clean separation for both themes
             minHeight: "calc(100vh - 120px)",
           }}

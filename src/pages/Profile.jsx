@@ -272,7 +272,7 @@ function Profile() {
   }
 
   return (
-    <Box sx={{ maxWidth: 1000, mx: "auto", p: { xs: 1.5, md: 3 } }}>
+    <Box sx={{ maxWidth: 1000, mx: "auto", p: { xs: 5, md: 1 } }}>
       {/* -------- Hero banner + floating avatar -------- */}
       <Box
         sx={{
@@ -280,14 +280,14 @@ function Profile() {
           borderRadius: 4,
           height: 140,
           mb: 8,
-          background: `linear-gradient(120deg, ${NAVY_DARK} 0%, ${NAVY} 55%, #14315c 100%)`,
+          background: `linear-gradient(120deg, ${NAVY_DARK} 0%, ${NAVY} 55%, #04347d 100%)`,
           overflow: "visible",
         }}
       >
         <Box
           sx={{
             position: "absolute",
-            left: { xs: "50%", sm: 32 },
+            left: { xs: "50%", sm: 50 },
             bottom: -56,
             transform: { xs: "translateX(-50%)", sm: "none" },
           }}
