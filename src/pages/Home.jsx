@@ -1,20 +1,21 @@
 import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { MenuOutlined } from "@mui/icons-material";
-
-// -----------------
-// import profile from "./Profile"
-//-----icons ----------
-import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
-import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
-import DvrRoundedIcon from '@mui/icons-material/DvrRounded';
-import CurrencyExchangeRoundedIcon from '@mui/icons-material/CurrencyExchangeRounded';
-import CalculateRoundedIcon from '@mui/icons-material/CalculateRounded';
-// --------------------
+import {
+  MenuOutlined,
+  SpaceDashboardRounded,
+  AccountBoxRounded,
+  DvrRounded,
+  CurrencyExchangeRounded,
+  CalculateRounded,
+  LogoutRounded,
+  TrendingUp,
+  DarkModeRounded,
+  LightModeRounded,
+  NotificationsNoneRounded,
+} from "@mui/icons-material";
 import {
   Box,
   Drawer,
-  // TextField,
   AppBar,
   Toolbar,
   Typography,
@@ -29,10 +30,12 @@ import {
   Menu,
   MenuItem,
   CssBaseline,
+  Tooltip,
+  Chip,
 } from "@mui/material";
 import { useColorMode } from "../context/ThemeContext";
 
-const DRAWER_WIDTH = 240;
+const DRAWER_WIDTH = 250;
 
 function Home() {
   const navigate = useNavigate();
@@ -43,11 +46,11 @@ function Home() {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const menuItems = [
-    { text: "Dashboard", path: "/home/dashboard", icon: <SpaceDashboardIcon /> },
-    { text: "Profile", path: "/home/profile", icon: <AccountBoxRoundedIcon />},
-    { text: "Watchlist", path: "/home/watchlist", icon: <DvrRoundedIcon /> },
-    { text: "Portfolio", path: "/home/portfolio", icon: <CurrencyExchangeRoundedIcon /> },
-    { text: "Calculator", path: "/home/calculator", icon: <CalculateRoundedIcon /> },
+    { text: "Dashboard", path: "/home/dashboard", icon: <SpaceDashboardRounded /> },
+    { text: "Watchlist", path: "/home/watchlist", icon: <DvrRounded /> },
+    { text: "Portfolio", path: "/home/portfolio", icon: <CurrencyExchangeRounded /> },
+    { text: "Calculators", path: "/home/calculator", icon: <CalculateRounded /> },
+    { text: "Profile", path: "/home/profile", icon: <AccountBoxRounded /> },
   ];
 
   const handleDrawerToggle = () => setOpen(!open);
@@ -56,7 +59,7 @@ function Home() {
 
   const handleLogout = () => {
     handleMenuClose();
-    // localStorage.removeItem("token");
+    localStorage.removeItem("token");
     navigate("/login");
   };
 
@@ -78,71 +81,184 @@ function Home() {
           zIndex: (theme) => theme.zIndex.drawer + 1,
           borderBottom: 1,
           borderColor: "divider",
-          bgcolor: "background.paper",
-          color: "#0b7ff3",
+          bgcolor: (theme) =>
+            theme.palette.mode === "dark"
+              ? "rgba(15, 23, 42, 0.85)"
+              : "rgba(255, 255, 255, 0.9)",
+          backdropFilter: "blur(12px)",
+          color: "text.primary",
         }}
       >
-        <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}>
+          {/* Left: Hamburger & Brand */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <IconButton
               color="inherit"
               aria-label="toggle drawer"
               edge="start"
               onClick={handleDrawerToggle}
-              sx={{ mr: 2, fontSize: "1.5rem" }}
+              sx={{
+                borderRadius: "10px",
+                border: "1px solid",
+                borderColor: "divider",
+                p: 0.8,
+              }}
             >
-              <MenuOutlined />
+              <MenuOutlined fontSize="small" />
             </IconButton>
 
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ fontWeight: "bold", color:"#0b7ff3"}}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.2,
+                cursor: "pointer",
+              }}
+              onClick={() => navigate("/home/dashboard")}
             >
+              <Box
+                sx={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: "9px",
+                  background: "linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 0 15px rgba(56, 189, 248, 0.4)",
+                }}
+              >
+                <TrendingUp sx={{ color: "#ffffff", fontSize: 20 }} />
+              </Box>
+              <Typography
+                variant="h6"
+                noWrap
+                sx={{
+                  fontWeight: 800,
+                  letterSpacing: "0.5px",
+                  fontSize: "1.2rem",
+                  background: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "linear-gradient(135deg, #ffffff 0%, #38bdf8 100%)"
+                      : "linear-gradient(135deg, #0f172a 0%, #0284c7 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                WealthNova
+              </Typography>
+            </Box>
 
-              𝙒𝙚𝙖𝙡𝙩𝙝𝙉𝙤𝙫𝙖
-             
-                
-                                     
-
-
-
-             
-
-            </Typography>
-             
+            <Chip
+              size="small"
+              label="🟢 NSE Live"
+              sx={{
+                ml: 1.5,
+                display: { xs: "none", md: "inline-flex" },
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                backgroundColor: (theme) =>
+                  theme.palette.mode === "dark"
+                    ? "rgba(16, 185, 129, 0.12)"
+                    : "rgba(16, 185, 129, 0.1)",
+                color: "#10b981",
+                border: "1px solid rgba(16, 185, 129, 0.3)",
+              }}
+            />
           </Box>
-          {/* <TextField label="fullWidth" id="fullWidth" /> */}
 
+          {/* Right: Notification, Theme Toggle, Profile */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <IconButton onClick={toggleColorMode} color="inherit">
-              {mode === "dark" ? "☀️" : "🌙"}
-            </IconButton>
+            <Tooltip title="Market Alerts">
+              <IconButton
+                size="small"
+                color="inherit"
+                sx={{
+                  borderRadius: "10px",
+                  border: "1px solid",
+                  borderColor: "divider",
+                  p: 0.9,
+                }}
+              >
+                <NotificationsNoneRounded fontSize="small" />
+              </IconButton>
+            </Tooltip>
 
-            <IconButton onClick={handleMenuOpen} color="inherit">
-              <Avatar sx={{ bgcolor: "primary.main", width: 36, height: 36 }}>
-                M
-              </Avatar>
-            </IconButton>
+            <Tooltip title={`Switch to ${mode === "dark" ? "Light" : "Dark"} Mode`}>
+              <IconButton
+                onClick={toggleColorMode}
+                size="small"
+                color="inherit"
+                sx={{
+                  borderRadius: "10px",
+                  border: "1px solid",
+                  borderColor: "divider",
+                  p: 0.9,
+                }}
+              >
+                {mode === "dark" ? (
+                  <LightModeRounded fontSize="small" sx={{ color: "#fbbf24" }} />
+                ) : (
+                  <DarkModeRounded fontSize="small" sx={{ color: "#6366f1" }} />
+                )}
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Account menu">
+              <IconButton onClick={handleMenuOpen} sx={{ p: 0.5 }}>
+                <Avatar
+                  sx={{
+                    bgcolor: "primary.main",
+                    color: "#ffffff",
+                    width: 36,
+                    height: 36,
+                    fontWeight: 700,
+                    fontSize: "0.95rem",
+                    border: "2px solid rgba(56, 189, 248, 0.4)",
+                  }}
+                >
+                  W
+                </Avatar>
+              </IconButton>
+            </Tooltip>
 
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
+              PaperProps={{
+                elevation: 4,
+                sx: {
+                  mt: 1.5,
+                  borderRadius: "14px",
+                  minWidth: 180,
+                  border: "1px solid",
+                  borderColor: "divider",
+                  backdropFilter: "blur(12px)",
+                  bgcolor: "background.paper",
+                },
+              }}
             >
               <MenuItem
                 onClick={() => {
                   handleMenuClose();
                   navigate("/home/profile");
                 }}
+                sx={{ py: 1.2, gap: 1.5 }}
               >
-                Profile 
+                <AccountBoxRounded fontSize="small" sx={{ color: "primary.main" }} />
+                <Typography variant="body2" fontWeight={600}>
+                  My Profile
+                </Typography>
               </MenuItem>
 
-              <Divider />
-              <MenuItem onClick={handleLogout} sx={{ color: "error.main" }}>
-                Logout
+              <Divider sx={{ my: 0.8 }} />
+
+              <MenuItem onClick={handleLogout} sx={{ py: 1.2, gap: 1.5, color: "error.main" }}>
+                <LogoutRounded fontSize="small" />
+                <Typography variant="body2" fontWeight={600}>
+                  Logout
+                </Typography>
               </MenuItem>
             </Menu>
           </Box>
@@ -165,53 +281,126 @@ function Home() {
           "& .MuiDrawer-paper": {
             width: DRAWER_WIDTH,
             boxSizing: "border-box",
-            bgcolor: "background.paper",
+            bgcolor: (theme) =>
+              theme.palette.mode === "dark" ? "#0a0f1d" : "#ffffff",
             borderColor: "divider",
+            borderRight: "1px solid",
           },
         }}
       >
         <Toolbar />
-        <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-          <List>
-            {menuItems.map((item) => (
-              <ListItem
-                key={item.text}
-                disablePadding
-                style={{
-                  padding: "2px 8px 2px 8px",
-                  borderRadius: 100,
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            p: 2,
+            justifyContent: "space-between",
+          }}
+        >
+          <Box>
+            <Typography
+              variant="caption"
+              sx={{
+                px: 1.5,
+                mb: 1,
+                display: "block",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+                color: "text.secondary",
+                fontSize: "0.7rem",
+              }}
+            >
+              Main Navigation
+            </Typography>
+
+            <List sx={{ gap: 0.5, display: "flex", flexDirection: "column" }}>
+              {menuItems.map((item) => {
+                const isActive =
+                  location.pathname === item.path ||
+                  (item.path === "/home/dashboard" && location.pathname === "/home");
+
+                return (
+                  <ListItem key={item.text} disablePadding>
+                    <ListItemButton
+                      selected={isActive}
+                      onClick={() => navigate(item.path)}
+                      sx={{
+                        borderRadius: "10px",
+                        py: 1.2,
+                        px: 2,
+                        transition: "all 0.2s ease-in-out",
+                        "&.Mui-selected": {
+                          bgcolor: (theme) =>
+                            theme.palette.mode === "dark"
+                              ? "rgba(56, 189, 248, 0.15)"
+                              : "rgba(2, 132, 199, 0.1)",
+                          color: "primary.main",
+                          "& .MuiListItemIcon-root": {
+                            color: "primary.main",
+                          },
+                          fontWeight: 700,
+                        },
+                        "&:hover": {
+                          bgcolor: (theme) =>
+                            theme.palette.mode === "dark"
+                              ? "rgba(255, 255, 255, 0.05)"
+                              : "rgba(0, 0, 0, 0.04)",
+                        },
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 38,
+                          color: isActive ? "primary.main" : "text.secondary",
+                        }}
+                      >
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={item.text}
+                        primaryTypographyProps={{
+                          fontSize: "0.9rem",
+                          fontWeight: isActive ? 700 : 500,
+                        }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </Box>
+
+          {/* Bottom Logout Item */}
+          <Box>
+            <Divider sx={{ mb: 1.5 }} />
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={handleLogout}
+                sx={{
+                  borderRadius: "10px",
+                  py: 1.2,
+                  px: 2,
+                  color: "error.main",
+                  "&:hover": {
+                    bgcolor: "rgba(244, 63, 94, 0.1)",
+                  },
                 }}
               >
-                <ListItemButton
-                  selected={location.pathname === item.path}
-                  onClick={() => navigate(item.path)}
-                  sx={{
-                    "&.Mui-selected": {
-                      borderRadius: 10,
-                    },
-                  }}
-                >
-                  <ListItemIcon sx={{ fontSize: "1.2rem", minWidth: 40 }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-
-          <Divider sx={{ mt: "auto" }} />
-
-          <List>
-            <ListItem disablePadding>
-              <ListItemButton onClick={handleLogout}>
-                <ListItemIcon sx={{ fontSize: "1.2rem", minWidth: 40 }}>
-                  ➜]
+                <ListItemIcon sx={{ minWidth: 38, color: "error.main" }}>
+                  <LogoutRounded fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primary="Logout" sx={{ color: "error.main" }} />
+                <ListItemText
+                  primary="Logout"
+                  primaryTypographyProps={{
+                    fontSize: "0.9rem",
+                    fontWeight: 600,
+                  }}
+                />
               </ListItemButton>
             </ListItem>
-          </List>
+          </Box>
         </Box>
       </Drawer>
 
@@ -220,25 +409,16 @@ function Home() {
         component="main"
         sx={{
           flexGrow: 1,
-          bgcolor: "background.default", // Automatic page background
-          p: 3,
+          bgcolor: "background.default",
+          p: { xs: 2, sm: 3.5 },
           minHeight: "100vh",
-          transition: (theme) =>
-            theme.transitions.create("margin", {
-              easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.leavingScreen,
-            }),
+          overflowX: "hidden",
         }}
       >
         <Toolbar />
         <Box
           sx={{
-            // bgcolor: "background.paper", // Automatic Light/Dark card background
             color: "text.primary",
-            // p: 3,
-            borderRadius: 2,
-            // border: 1,
-            borderColor: "divider", // Clean separation for both themes
             minHeight: "calc(100vh - 120px)",
           }}
         >
