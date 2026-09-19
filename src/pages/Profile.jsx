@@ -42,10 +42,8 @@ import {
 import axios from "axios";
 
 // ---- axios instance (auto-attaches token, auto-logout on 401) ----
-// ⚠️ Check this against your actual routes file. Your backend controller
-// comments reference /api/users/uploadProfilePic (plural "users") — make
-// sure BASE_URL below matches exactly, or every call will 404.
-const BASE_URL = "http://localhost:3002/api/user";
+// Using /api/user/ prefix for all user-related endpoints
+const BASE_URL = "https://wealthnova-backend.onrender.com";
 
 const axiosInstance = axios.create({ baseURL: BASE_URL });
 
@@ -131,7 +129,7 @@ function Profile() {
     setLoading(true);
     setLoadError("");
     try {
-      const res = await axiosInstance.get("/getProfile");
+      const res = await axiosInstance.get("/api/user/getProfile");
       const data = res.data?.user || res.data;
       setUser(data);
       setEditFormData({ fullName: data.fullName || "", country: data.country || "" });
@@ -152,7 +150,7 @@ function Profile() {
     e.preventDefault();
     setSavingProfile(true);
     try {
-      const res = await axiosInstance.put("/updateProfile", {
+      const res = await axiosInstance.put("/api/user/updateProfile", {
         fullName: editFormData.fullName,
         country: editFormData.country,
       });
@@ -189,7 +187,7 @@ function Profile() {
 
     setUploadingAvatar(true);
     try {
-      const res = await axiosInstance.put("/uploadProfilePic", formData, {
+      const res = await axiosInstance.put("/api/user/uploadProfilePic", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setUser((prev) => ({ ...prev, profilePic: res.data.profilePic }));
@@ -217,7 +215,7 @@ function Profile() {
 
     setChangingPassword(true);
     try {
-      const res = await axiosInstance.put("/changePassword", {
+      const res = await axiosInstance.put("/api/user/changePassword", {
         oldPassword: passwordData.oldPassword,
         newPassword: passwordData.newPassword,
       });
@@ -234,7 +232,7 @@ function Profile() {
   const handleDeleteAccount = async () => {
     setDeleting(true);
     try {
-      await axiosInstance.delete("/deleteAccount");
+      await axiosInstance.delete("/api/user/deleteAccount");
       localStorage.removeItem("token");
       window.location.href = "/login";
     } catch (err) {
@@ -442,6 +440,10 @@ function Profile() {
                 {isEditing && (
                   <Box sx={{ mt: 2.5, display: "flex", gap: 1.5, justifyContent: "flex-end" }}>
                     <Button
+
+                      sx={{border:"1px solid white", "&:hover": { bgcolor: "#38393ade" }}}
+
+
                       startIcon={<Close />}
                       color="inherit"
                       onClick={() => {
@@ -456,7 +458,7 @@ function Profile() {
                       variant="contained"
                       startIcon={savingProfile ? <CircularProgress size={16} color="inherit" /> : <Save />}
                       disabled={savingProfile}
-                      sx={{ bgcolor: NAVY, "&:hover": { bgcolor: NAVY_DARK } }}
+                      sx={{ bgcolor: NAVY, "&:hover": { bgcolor: "#070c10", color:"white", border:"1px solid white" }  }}
                     >
                       Save Changes
                     </Button>
@@ -545,7 +547,7 @@ function Profile() {
                     variant="contained"
                     disabled={changingPassword}
                     startIcon={changingPassword ? <CircularProgress size={16} color="inherit" /> : null}
-                    sx={{ bgcolor: NAVY, "&:hover": { bgcolor: NAVY_DARK } }}
+                      sx={{ bgcolor: NAVY, "&:hover": { bgcolor: "#070c10", color:"white", border:"1px solid white" }  }}
                   >
                     Update Password
                   </Button>
@@ -553,10 +555,10 @@ function Profile() {
               </Box>
             </Paper>
 
-            {/* Danger zone */}
+            {/* ----------------------Danger zone ---------------------------------*/}
             <Paper
               elevation={0}
-              sx={{ p: 3, borderRadius: 3, border: "1px solid", borderColor: "error.light", bgcolor: "#fff8f8" }}
+              sx={{ p: 3, borderRadius: 3, border: "1px solid", borderColor: "error.light", bgcolor: "#a50a0a46" }}
             >
               <Typography
                 variant="h6"
@@ -574,7 +576,7 @@ function Profile() {
                 color="error"
                 onClick={() => setOpenDeleteDialog(true)}
               >
-                Delete Profile
+                Delete Account
               </Button>
             </Paper>
           </Stack>

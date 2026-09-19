@@ -108,7 +108,7 @@ const Login = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:3002/api/auth/login",
+        "https://wealthnova-backend.onrender.com/api/auth/login",
         loginData
       );
 
