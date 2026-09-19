@@ -161,7 +161,7 @@ const Signup = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:3002/api/auth/register",
+        "https://wealthnova-backend.onrender.com/api/auth/register",
         signupData
       );
 
