@@ -3,27 +3,22 @@ import {
   Box,
   Button,
   Container,
-  IconButton,
   InputBase,
   Link,
   Paper,
   Typography,
   Grid,
   Card,
-  // CardContent,
   Chip,
   Fab,
   Zoom,
-  // Fade,
-  // Slide,
 } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+// import { AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import { motion, useReducedMotion } from "framer-motion";
 
 import SearchIcon from "@mui/icons-material/Search";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
@@ -32,10 +27,9 @@ import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalance
 import SecurityIcon from "@mui/icons-material/Security";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
-// import SpeedIcon from "@mui/icons-material/Speed";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
-// import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+// import { lightBlue } from "@mui/material/colors";
 
 /* -------------------------------------------------------------------------- */
 /* Constants                                                                 */
@@ -48,7 +42,7 @@ const CHROME_H = HEADER_H + TICKER_H;
 const FONT = '"Plus Jakarta Sans", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif';
 const HERO_VIDEO = "/perfect_hai_but_ekdum_HD_vdieo.mp4";
 
-const stockPath = (symbol) => `/stocks/${encodeURIComponent(symbol.toUpperCase())}`;
+// const stockPath = (symbol) => `/stocks/${encodeURIComponent(symbol.toUpperCase())}`;
 
 const MARKET = [
   { name: "NIFTY 50", value: "22,145.00", change: 1.2 },
@@ -139,7 +133,7 @@ const NEWS = [
     img: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=600&q=80",
     category: "Policy",
     date: "3 days ago",
-    url: "https://pib.gov.in/",
+    url: "https://pib.gov.in/", 
   },
   {
     id: 8,
@@ -209,13 +203,6 @@ const STEPS = [
   },
 ];
 
-// const STATS = [
-//   { value: "10K+", label: "Active Users" },
-//   { value: "5,000+", label: "Stocks Tracked" },
-//   { value: "99.9%", label: "Uptime" },
-//   { value: "24/7", label: "Market Coverage" },
-// ];
-
 const PLATFORM_LINKS = [
   { label: "Live Market", to: "/markets" },
   { label: "AI Predictions", to: "/predictions" },
@@ -233,11 +220,11 @@ const LEGAL_LINKS = [
 /* Design tokens                                                             */
 /* -------------------------------------------------------------------------- */
 
-const PRIMARY_BLUE = "#102362";
-const DARK_BLUE = "#06122b";
+const PRIMARY_BLUE = "#00245b";
+const DARK_BLUE = "#0d0b0b";
 const LIGHT_BLUE = "#3B82F6";
-const CREAM = "#FFFFFF";
-const WHITE = "#FFFFFF";
+const CREAM = "#e1d7d7";
+const WHITE = "#d1c6c6";
 const ACCENT_BLUE = "#378df6";
 
 const hexToRgba = (hex, a) => {
@@ -255,13 +242,13 @@ const makeTone = (bg, fg, accent) => ({
   hover: hexToRgba(fg, 0.08),
 });
 
-const getTokens = (isDark) => ({
-  page: isDark ? makeTone(DARK_BLUE, CREAM, LIGHT_BLUE) : makeTone(WHITE, DARK_BLUE, PRIMARY_BLUE),
-  band: isDark ? makeTone(PRIMARY_BLUE, CREAM, LIGHT_BLUE) : makeTone(PRIMARY_BLUE, CREAM, LIGHT_BLUE),
-  card: isDark ? makeTone(hexToRgba(PRIMARY_BLUE, 0.3), CREAM, LIGHT_BLUE) : makeTone(WHITE, PRIMARY_BLUE, PRIMARY_BLUE),
-  up: isDark ? "#34D399" : "#059669",
-  down: isDark ? "#F87171" : "#DC2626",
-  accent: isDark ? LIGHT_BLUE : PRIMARY_BLUE,
+const getTokens = () => ({
+  page: makeTone(DARK_BLUE, CREAM, LIGHT_BLUE),
+  band: makeTone(PRIMARY_BLUE, CREAM, LIGHT_BLUE),
+  card: makeTone(hexToRgba(PRIMARY_BLUE, 0.3), CREAM, LIGHT_BLUE),
+  up: "#34D399",
+  down: "#F87171",
+  accent: LIGHT_BLUE,
 });
 
 const solidBtn = (tone, accent = false) => {
@@ -318,7 +305,7 @@ const Logo = ({ tone, size = 40 }) => (
         width: size,
         height: size,
         borderRadius: 2,
-        bgcolor: tone.fg,
+        bgcolor:"#00b0ff",
         display: "grid",
         placeItems: "center",
         boxShadow: `0 4px 12px ${hexToRgba(tone.fg, 0.3)}`,
@@ -335,7 +322,7 @@ const Logo = ({ tone, size = 40 }) => (
   </Link>
 );
 
-const Ticker = ({ tone, down: isDark }) => {
+const Ticker = () => {
   const items = [...MARKET, ...MARKET];
 
   return (
@@ -345,10 +332,10 @@ const Ticker = ({ tone, down: isDark }) => {
       sx={{
         height: TICKER_H,
         overflow: "hidden",
-        bgcolor: isDark ? hexToRgba(DARK_BLUE, 0.95) : hexToRgba(PRIMARY_BLUE, 0.95),
+        bgcolor: hexToRgba(PRIMARY_BLUE, 0.95),
         backdropFilter: "blur(8px)",
-        borderTop: `1px solid ${isDark ? tone.border : hexToRgba(CREAM, 0.3)}`,
-        borderBottom: `1px solid ${isDark ? tone.border : hexToRgba(CREAM, 0.3)}`,
+        borderTop: `1px solid ${hexToRgba(CREAM, 0.1)}`,
+        borderBottom: `1px solid ${hexToRgba(CREAM, 0.1)}`,
       }}
     >
       <Box
@@ -382,10 +369,10 @@ const Ticker = ({ tone, down: isDark }) => {
                 fontVariantNumeric: "tabular-nums",
               }}
             >
-              <Box component="span" sx={{ fontWeight: 700, color: isDark ? tone.fg : CREAM }}>
+              <Box component="span" sx={{ fontWeight: 700, color: CREAM }}>
                 {m.name}
               </Box>
-              <Box component="span" sx={{ color: isDark ? tone.muted : hexToRgba(CREAM, 0.8) }}>
+              <Box component="span" sx={{ color: hexToRgba(CREAM, 0.8) }}>
                 {m.value}
               </Box>
               <Chip
@@ -440,58 +427,6 @@ const FooterLinks = ({ title, links, tone }) => (
   </Box>
 );
 
-const LiveChart = ({ symbol, title, height = 300 }) => (
-  <Box
-    sx={{
-      height,
-      borderRadius: 1,
-      overflow: "hidden",
-      bgcolor: "#131722",
-      border: "1px solid #2a2e39",
-    }}
-  >
-    <Box
-      sx={{
-        height: "100%",
-        width: "100%",
-      }}
-    >
-      <iframe
-        src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_${symbol}&symbol=NSE:${symbol}&interval=D&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=131722&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC`}
-        style={{
-          width: "100%",
-          height: "100%",
-          border: "none",
-        }}
-        title={`${title} Chart`}
-      />
-    </Box>
-  </Box>
-);
-
-// const StatCard = ({ value, label, tone }) => (
-//   <Box
-//     sx={{
-//       textAlign: "center",
-//       p: 2,
-//     }}
-//   >
-//     <Typography
-//       sx={{
-//         fontWeight: 800,
-//         fontSize: { xs: "2rem", md: "2.5rem" },
-//         color: tone.accent,
-//         mb: 0.5,
-//       }}
-//     >
-//       {value}
-//     </Typography>
-//     <Typography sx={{ color: tone.muted, fontSize: "0.9rem", fontWeight: 500 }}>
-//       {label}
-//     </Typography>
-//   </Box>
-// );
-
 /* -------------------------------------------------------------------------- */
 /* Page                                                                      */
 /* -------------------------------------------------------------------------- */
@@ -511,22 +446,19 @@ const LandingPage = () => {
   const reduceMotion = useReducedMotion();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  const [isDark, setIsDark] = useState(() => {
-    try {
-      return localStorage.getItem("wn-theme") === "dark";
-    } catch {
-      return false;
-    }
-  });
-  const [query, setQuery] = useState("");
+  // Chart ke personal search box ke liye naya state
+  const [chartInput, setChartInput] = useState("");
 
-  useEffect(() => {
-    try {
-      localStorage.setItem("wn-theme", isDark ? "dark" : "light");
-    } catch {
-      /* ignore */
+  const handleChartSearchSubmit = (e) => {
+    e.preventDefault();
+    if (chartInput.trim()) {
+      setChartSymbol(chartInput.trim().toUpperCase()); // Isse niche wala chart update ho jayega
     }
-  }, [isDark]);
+  };
+  
+  const [query, setQuery] = useState("");
+  // STATE TO HOLD CURRENT CHART SYMBOL
+  const [chartSymbol, setChartSymbol] = useState("NIFTY 50");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -536,13 +468,15 @@ const LandingPage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const { page, band, card, up, down, accent } = useMemo(() => getTokens(isDark), [isDark]);
+  const { page, band, card, up, down } = useMemo(() => getTokens(), []);
 
   const handleSearch = (e) => {
     e.preventDefault();
     const symbol = query.trim();
     if (!symbol) return;
-    navigate(stockPath(symbol));
+    
+    setChartSymbol(symbol.toUpperCase());
+    scrollToId("charts");
   };
 
   const scrollToId = (id) =>
@@ -572,7 +506,7 @@ const LandingPage = () => {
   const subHeading = {
     fontWeight: 600,
     fontSize: { xs: "1.1rem", md: "1.25rem" },
-    color: isDark ? page.muted : hexToRgba(DARK_BLUE, 0.7),
+    color: page.muted,
     lineHeight: 1.6,
   };
 
@@ -676,22 +610,10 @@ const LandingPage = () => {
             >
               Sign up
             </Button>
-            <IconButton
-              onClick={() => setIsDark((d) => !d)}
-              aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-              sx={{
-                color: band.fg,
-                ...focusRing(band.fg),
-                bgcolor: band.soft,
-                "&:hover": { bgcolor: band.hover },
-              }}
-            >
-              {isDark ? <LightModeIcon /> : <DarkModeIcon />}
-            </IconButton>
           </Box>
         </Container>
 
-        <Ticker tone={band} up={up} down={down} isDark={isDark} />
+        <Ticker tone={band} up={up} down={down} isDark={true} />
       </Box>
 
       <Box aria-hidden sx={{ height: CHROME_H }} />
@@ -706,7 +628,7 @@ const LandingPage = () => {
             placeItems: "center",
             minHeight: `clamp(600px, calc(100svh - ${CHROME_H}px), 800px)`,
             overflow: "hidden",
-            bgcolor: isDark ? DARK_BLUE : PRIMARY_BLUE,
+            bgcolor: DARK_BLUE,
             color: CREAM,
           }}
         >
@@ -734,9 +656,7 @@ const LandingPage = () => {
             sx={{
               position: "absolute",
               inset: 0,
-              background: isDark 
-                ? `linear-gradient(180deg, ${hexToRgba(DARK_BLUE, 0.85)} 0%, ${hexToRgba(DARK_BLUE, 0.7)} 50%, ${hexToRgba(DARK_BLUE, 0.95)} 100%)`
-                : `linear-gradient(180deg, ${hexToRgba(PRIMARY_BLUE, 0.85)} 0%, ${hexToRgba(PRIMARY_BLUE, 0.7)} 50%, ${hexToRgba(PRIMARY_BLUE, 0.95)} 100%)`,
+              background: `linear-gradient(180deg, ${hexToRgba(DARK_BLUE, 0.85)} 0%, ${hexToRgba(DARK_BLUE, 0.7)} 50%, ${hexToRgba(DARK_BLUE, 0.95)} 100%)`,
             }}
           />
 
@@ -765,7 +685,7 @@ const LandingPage = () => {
                     mb: 2,
                   }}
                 >
-                  Smarter Stock Analysis,
+                  Smarter Stock Analysis
                   <br />
                   <Typography component="span" sx={{ color: ACCENT_BLUE }}>
                     Backed by Data
@@ -872,10 +792,10 @@ const LandingPage = () => {
         </Box>
 
         {/* ------------------------- TOP GAINERS & LOSERS --------------------- */}
-        <Box component="section" id="gainers-losers" sx={{ ...section(page), bgcolor: isDark ? page.bg : WHITE, py: { xs: 6, md: 8 } }}>
+        <Box component="section" id="gainers-losers" sx={{ ...section(page), py: { xs: 6, md: 8 } }}>
           <Container maxWidth="lg">
             <Box sx={{ textAlign: "center", mb: 4 }}>
-              <Typography component="h2" sx={{ ...heading, mb: 1, fontSize: { xs: "1.5rem", md: "2rem" }, color: isDark ? page.fg : PRIMARY_BLUE }}>
+              <Typography component="h2" sx={{ ...heading, mb: 1, fontSize: { xs: "1.5rem", md: "2rem" }, color: page.fg }}>
                 Market Movers
               </Typography>
               <Typography sx={{ ...subHeading, fontSize: { xs: "0.9rem", md: "1rem" }, maxWidth: 600, mx: "auto" }}>
@@ -888,13 +808,13 @@ const LandingPage = () => {
                   elevation={0}
                   sx={{
                     p: 3,
-                    bgcolor: isDark ? card.bg : WHITE,
-                    border: `1px solid ${isDark ? card.border : hexToRgba(PRIMARY_BLUE, 0.3)}`,
+                    bgcolor: card.bg,
+                    border: `1px solid ${card.border}`,
                     borderRadius: 1,
                     transition: "all 0.3s ease",
                     "&:hover": {
                       transform: "translateY(-2px)",
-                      boxShadow: `0 8px 24px ${hexToRgba(PRIMARY_BLUE, 0.15)}`,
+                      boxShadow: `0 8px 24px ${hexToRgba("black", 0.15)}`,
                       borderColor: PRIMARY_BLUE,
                     },
                   }}
@@ -956,8 +876,8 @@ const LandingPage = () => {
                   elevation={0}
                   sx={{
                     p: 3,
-                    bgcolor: isDark ? card.bg : WHITE,
-                    border: `1px solid ${isDark ? card.border : hexToRgba(PRIMARY_BLUE, 0.3)}`,
+                    bgcolor: card.bg,
+                    border: `1px solid ${card.border}`,
                     borderRadius: 1,
                     transition: "all 0.3s ease",
                     "&:hover": {
@@ -1023,71 +943,11 @@ const LandingPage = () => {
           </Container>
         </Box>
 
-        {/* ------------------------------ CHARTS SECTION --------------------- */}
-        <Box component="section" id="charts" sx={{ ...section(band), bgcolor: isDark ? band.bg : hexToRgba(PRIMARY_BLUE, 0.08), py: { xs: 6, md: 8 } }}>
-          <Container maxWidth="lg">
-            <Box sx={{ textAlign: "center", mb: 6 }}>
-              <Typography component="h2" sx={{ ...heading, mb: 1, fontSize: { xs: "1.5rem", md: "2rem" }, color: isDark ? band.fg : PRIMARY_BLUE }}>
-                Live Market Charts
-              </Typography>
-              <Typography sx={{ ...subHeading, fontSize: { xs: "0.9rem", md: "1rem" }, maxWidth: 600, mx: "auto" }}>
-                Real-time interactive charts for major indices.
-              </Typography>
-            </Box>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <Paper
-                  elevation={0}
-                  sx={{
-                    p: 2,
-                    bgcolor: isDark ? card.bg : WHITE,
-                    border: `1px solid ${isDark ? card.border : hexToRgba(PRIMARY_BLUE, 0.3)}`,
-                    borderRadius: 1,
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-2px)",
-                      boxShadow: `0 8px 24px ${hexToRgba(PRIMARY_BLUE, 0.15)}`,
-                      borderColor: PRIMARY_BLUE,
-                    },
-                  }}
-                >
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, fontSize: "1.1rem", color: isDark ? card.fg : PRIMARY_BLUE }}>
-                    NIFTY 50 - Live Chart
-                  </Typography>
-                  <LiveChart symbol="NIFTY" title="NIFTY 50" height={300} />
-                </Paper>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Paper
-                  elevation={0}
-                  sx={{
-                    p: 2,
-                    bgcolor: isDark ? card.bg : WHITE,
-                    border: `1px solid ${isDark ? card.border : hexToRgba(PRIMARY_BLUE, 0.3)}`,
-                    borderRadius: 1,
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-2px)",
-                      boxShadow: `0 8px 24px ${hexToRgba(PRIMARY_BLUE, 0.15)}`,
-                      borderColor: PRIMARY_BLUE,
-                    },
-                  }}
-                >
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, fontSize: "1.1rem", color: isDark ? card.fg : PRIMARY_BLUE }}>
-                    SENSEX - Live Chart
-                  </Typography>
-                  <LiveChart symbol="SENSEX" title="SENSEX" height={300} />
-                </Paper>
-              </Grid>
-            </Grid>
-          </Container>
-        </Box>
-
         {/* ------------------------------- NEWS ------------------------------ */}
-        <Box component="section" id="news" sx={{ ...section(page), bgcolor: isDark ? page.bg : WHITE, py: { xs: 6, md: 8 } }}>
+        <Box component="section" id="news" sx={{ ...section(page), py: { xs: 6, md: 8 } }}>
           <Container maxWidth="lg">
             <Box sx={{ textAlign: "center", mb: 6 }}>
-              <Typography component="h2" sx={{ ...heading, mb: 1, fontSize: { xs: "1.5rem", md: "2rem" }, color: isDark ? page.fg : PRIMARY_BLUE }}>
+              <Typography component="h2" sx={{ ...heading, mb: 1, fontSize: { xs: "1.5rem", md: "2rem" }, color: page.fg }}>
                 Market News & Insights
               </Typography>
               <Typography sx={{ ...subHeading, fontSize: { xs: "0.9rem", md: "1rem" }, maxWidth: 600, mx: "auto" }}>
@@ -1111,10 +971,10 @@ const LandingPage = () => {
                   rel="noopener noreferrer"
                   sx={{
                     overflow: "hidden",
-                    bgcolor: isDark ? card.bg : WHITE,
-                    color: isDark ? card.fg : DARK_BLUE,
+                    bgcolor: card.bg,
+                    color: card.fg,
                     borderRadius: 1,
-                    border: `1px solid ${isDark ? card.border : hexToRgba(PRIMARY_BLUE, 0.3)}`,
+                    border: `1px solid ${card.border}`,
                     transition: "all 0.3s ease",
                     cursor: "pointer",
                     textDecoration: "none",
@@ -1172,74 +1032,191 @@ const LandingPage = () => {
           </Container>
         </Box>
 
+     {/* ------------------------------ TRADINGVIEW CHART SECTION --------------------- */}
+        <Box component="section" id="charts" sx={{ ...section(page), pb: { xs: 4, md: 8 } }}>
+          <Container maxWidth="xl">
+            
+            {/* HEADING AUR SEARCH BAR EKDUM CENTER MEIN */}
+            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", mb: 5, gap: 3 }}>
+              
+              {/* <Typography component="h2" sx={{ fontWeight: 800, fontSize: { xs: "2rem", md: "2.5rem" }, textAlign: "center", color: page.fg }}>
+                Search Chart
+              </Typography> */}
+
+              {/* CHART WALA PERSONAL SEARCH BOX */}
+              <Paper
+                component="form"
+                onSubmit={handleChartSearchSubmit}
+                elevation={0}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: { xs: "100%", md: "500px" }, // Center me thoda bada acha lagega
+                  p: 0.5,
+                  pl: 2,
+                  bgcolor: hexToRgba("white", 0.05), // Transparent off-white
+                  border: `1px solid ${hexToRgba("white", 0.2)}`,
+                  borderRadius: 1, // Sharp radius
+                  "&:focus-within": { borderColor: "white" },
+                }}
+              >
+                <SearchIcon sx={{ color: page.muted, mr: 1.5 }} />
+                <InputBase
+                  value={chartInput}
+                  onChange={(e) => setChartInput(e.target.value)}
+                  placeholder="Search company (e.g. HDFC, TCS)"
+                  sx={{ flex: 1, color: "white", fontSize: "1rem" }}
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disableElevation
+                  disabled={!chartInput.trim()}
+                  sx={{
+                    bgcolor: CREAM,
+                    color: PRIMARY_BLUE,
+                    fontWeight: 700,
+                    textTransform: "none",
+                    borderRadius: 1,
+                    px: 4,
+                    py: 1,
+                    "&:hover": { bgcolor: hexToRgba(CREAM, 0.9) },
+                    "&.Mui-disabled": { bgcolor: "white", color: PRIMARY_BLUE },
+                  }}
+                >
+                  Search
+                </Button>
+              </Paper>
+            </Box>
+
+            {/* TRANSPARENT TRADINGVIEW WIDGET */}
+            <Box 
+              sx={{ 
+                width: "100%", 
+                height: { xs: 300, md: 450 }, 
+                borderRadius: 0, 
+                overflow: "hidden", 
+                boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+              }}
+              ref={(elem) => {
+                if (elem && elem.children.length === 0) {
+                  const script = document.createElement("script");
+                  script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+                  script.type = "text/javascript";
+                  script.async = true;
+                  script.innerHTML = JSON.stringify({
+                    "autosize": true,
+                    "symbol": chartSymbol === "NIFTY 50" ? "BSE:SENSEX" : chartSymbol,
+                    "interval": "D",
+                    "timezone": "Asia/Kolkata",
+                    "theme": "dark",
+                    "style": "1",
+                    "locale": "in",
+                    "enable_publishing": false,
+                    "backgroundColor": "rgba(0, 0, 0, 0)", // Transparent background
+                    "gridColor": "rgba(255, 255, 255, 0.05)",
+                    "hide_top_toolbar": false,
+                    "hide_legend": false,
+                    "save_image": false,
+                    "support_host": "https://www.tradingview.com"
+                  });
+                  elem.appendChild(script);
+                } else if (elem && elem.children.length > 0) {
+                   elem.innerHTML = "";
+                   const script = document.createElement("script");
+                   script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+                   script.type = "text/javascript";
+                   script.async = true;
+                   script.innerHTML = JSON.stringify({
+                     "autosize": true,
+                     "symbol": chartSymbol === "NIFTY 50" ? "BSE:SENSEX" : chartSymbol,
+                     "interval": "D",
+                     "timezone": "Asia/Kolkata",
+                     "theme": "dark",
+                     "style": "1",
+                     "locale": "in",
+                     "enable_publishing": false,
+                     "backgroundColor": "rgba(0, 0, 0, 0)", 
+                     "gridColor": "rgba(255, 255, 255, 0.05)",
+                     "hide_top_toolbar": false,
+                     "hide_legend": false,
+                     "save_image": false,
+                     "support_host": "https://www.tradingview.com"
+                   });
+                   elem.appendChild(script);
+                }
+              }}
+            />
+          </Container>
+        </Box>
         {/* --------------------------- HOW IT WORKS -------------------------- */}
-        <Box component="section" id="how-it-works" sx={{ ...section(band), bgcolor: isDark ? band.bg : WHITE }}>
+        <Box component="section" id="how-it-works" sx={{ ...section(band), py: { xs: 6, md: 8 } }}>
           <Container maxWidth="lg">
-            <Box sx={{ textAlign: "center", mb: 10 }}>
-              <Typography component="h2" sx={{ ...heading, mb: 2, color: isDark ? band.fg : PRIMARY_BLUE }}>
+            <Box sx={{ textAlign: "center", mb: 6 }}>
+              <Typography component="h2" sx={{ ...heading, mb: 1, fontSize: { xs: "1.5rem", md: "2rem" }, color: band.fg }}>
                 How It Works
               </Typography>
-              <Typography sx={{ ...subHeading, maxWidth: 600, mx: "auto" }}>
-                Get started in minutes. No complex setup required. Begin analyzing stocks like a professional investor.
+              <Typography sx={{ ...subHeading, fontSize: { xs: "0.9rem", md: "1rem" }, maxWidth: 600, mx: "auto", color: hexToRgba(CREAM, 0.8) }}>
+                Get started in minutes. No complex setup required.
               </Typography>
             </Box>
 
-            <Box sx={{ display: "grid", gap: 4, gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" } }}>
+            <Box sx={{ display: "grid", gap: 3, gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" } }}>
               {STEPS.map((step, i) => (
                 <Box
                   key={step.title}
                   sx={{
                     position: "relative",
-                    p: 4,
-                    bgcolor: isDark ? card.bg : WHITE,
-                    border: `1px solid ${isDark ? card.border : hexToRgba(PRIMARY_BLUE, 0.3)}`,
-                    borderRadius: 3,
+                    p: 3,
+                    bgcolor: hexToRgba(DARK_BLUE, 0.4),
+                    border: `1px solid ${hexToRgba(CREAM, 0.2)}`,
+                    borderRadius: 1,
                     transition: "all 0.3s ease",
                     "&:hover": {
-                      transform: "translateY(-8px)",
-                      boxShadow: `0 20px 60px ${hexToRgba(PRIMARY_BLUE, 0.15)}`,
-                      borderColor: PRIMARY_BLUE,
+                      transform: "translateY(-4px)",
+                      boxShadow: `0 12px 32px ${hexToRgba(PRIMARY_BLUE, 0.3)}`,
+                      borderColor: hexToRgba(CREAM, 0.4),
                     },
                   }}
                 >
                   <Box
                     sx={{
                       position: "absolute",
-                      top: -20,
-                      left: { xs: 20, md: 20 },
-                      width: 40,
-                      height: 40,
+                      top: -16,
+                      left: 16,
+                      width: 32,
+                      height: 32,
                       borderRadius: "50%",
-                      bgcolor: accent,
-                      color: CREAM,
+                      bgcolor: CREAM,
+                      color: PRIMARY_BLUE,
                       display: "grid",
                       placeItems: "center",
                       fontWeight: 800,
-                      fontSize: "1.25rem",
-                      boxShadow: `0 4px 12px ${hexToRgba(accent, 0.4)}`,
+                      fontSize: "1rem",
+                      boxShadow: `0 4px 12px ${hexToRgba(CREAM, 0.3)}`,
                     }}
                   >
                     {i + 1}
                   </Box>
-                  <Box sx={{ mt: 2, mb: 3 }}>
+                  <Box sx={{ mt: 1, mb: 2 }}>
                     <Box
                       sx={{
-                        width: 56,
-                        height: 56,
-                        borderRadius: 2,
-                        bgcolor: hexToRgba(accent, 0.15),
+                        width: 48,
+                        height: 48,
+                        borderRadius: 1,
+                        bgcolor: hexToRgba(CREAM, 0.15),
                         display: "grid",
                         placeItems: "center",
-                        mb: 3,
+                        mb: 2,
                       }}
                     >
-                      <step.icon sx={{ color: accent, fontSize: 32 }} />
+                      <step.icon sx={{ color: CREAM, fontSize: 28 }} />
                     </Box>
                   </Box>
-                  <Typography component="h3" sx={{ fontWeight: 700, fontSize: "1.25rem", mb: 2 }}>
+                  <Typography component="h3" sx={{ fontWeight: 700, fontSize: "1.1rem", mb: 1, color: CREAM }}>
                     {step.title}
                   </Typography>
-                  <Typography sx={{ color: band.muted, fontSize: "0.95rem", lineHeight: 1.7 }}>
+                  <Typography sx={{ color: hexToRgba(CREAM, 0.8), fontSize: "0.9rem", lineHeight: 1.6 }}>
                     {step.desc}
                   </Typography>
                 </Box>
@@ -1249,21 +1226,21 @@ const LandingPage = () => {
         </Box>
 
         {/* ----------------------------- FEATURES ---------------------------- */}
-        <Box component="section" id="features" sx={{ ...section(page), bgcolor: isDark ? page.bg : WHITE }}>
+        <Box component="section" id="features" sx={{ ...section(page), py: { xs: 6, md: 8 } }}>
           <Container maxWidth="lg">
-            <Box sx={{ textAlign: "center", mb: 10 }}>
-              <Typography component="h2" sx={{ ...heading, mb: 2, color: isDark ? page.fg : PRIMARY_BLUE }}>
+            <Box sx={{ textAlign: "center", mb: 6 }}>
+              <Typography component="h2" sx={{ ...heading, mb: 1, fontSize: { xs: "1.5rem", md: "2rem" }, color: page.fg }}>
                 Powerful Features
               </Typography>
-              <Typography sx={{ ...subHeading, maxWidth: 600, mx: "auto" }}>
-                Everything you need to analyze, track, and optimize your investment portfolio in one comprehensive platform.
+              <Typography sx={{ ...subHeading, fontSize: { xs: "0.9rem", md: "1rem" }, maxWidth: 600, mx: "auto" }}>
+                Everything you need to analyze, track, and optimize your investments.
               </Typography>
             </Box>
 
             <Box
               sx={{
                 display: "grid",
-                gap: 4,
+                gap: 3,
                 gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" },
               }}
             >
@@ -1272,17 +1249,17 @@ const LandingPage = () => {
                   key={title}
                   elevation={0}
                   sx={{
-                    p: 4,
-                    bgcolor: isDark ? card.bg : WHITE,
-                    color: isDark ? card.fg : DARK_BLUE,
-                    border: `1px solid ${isDark ? card.border : hexToRgba(PRIMARY_BLUE, 0.3)}`,
-                    borderRadius: 3,
+                    p: 3,
+                    bgcolor: card.bg,
+                    color: card.fg,
+                    border: `1px solid ${card.border}`,
+                    borderRadius: 1,
                     transition: "all 0.3s ease",
                     position: "relative",
                     overflow: "hidden",
                     "&:hover": {
-                      transform: "translateY(-8px)",
-                      boxShadow: `0 20px 60px ${hexToRgba(color, 0.2)}`,
+                      transform: "translateY(-4px)",
+                      boxShadow: `0 12px 32px ${hexToRgba(color, 0.15)}`,
                       borderColor: PRIMARY_BLUE,
                     },
                     "&::before": {
@@ -1291,7 +1268,7 @@ const LandingPage = () => {
                       top: 0,
                       left: 0,
                       right: 0,
-                      height: 4,
+                      height: 3,
                       bgcolor: color,
                       transform: "scaleX(0)",
                       transformOrigin: "left",
@@ -1304,21 +1281,21 @@ const LandingPage = () => {
                 >
                   <Box
                     sx={{
-                      width: 56,
-                      height: 56,
-                      borderRadius: 2,
+                      width: 48,
+                      height: 48,
+                      borderRadius: 1,
                       bgcolor: hexToRgba(color, 0.15),
                       display: "grid",
                       placeItems: "center",
-                      mb: 3,
+                      mb: 2,
                     }}
                   >
-                    <Icon sx={{ color: color, fontSize: 32 }} />
+                    <Icon sx={{ color: color, fontSize: 28 }} />
                   </Box>
-                  <Typography component="h3" sx={{ fontWeight: 700, fontSize: "1.25rem", mb: 2 }}>
+                  <Typography component="h3" sx={{ fontWeight: 700, fontSize: "1.1rem", mb: 1 }}>
                     {title}
                   </Typography>
-                  <Typography sx={{ color: page.muted, fontSize: "0.95rem", lineHeight: 1.7 }}>
+                  <Typography sx={{ color: page.muted, fontSize: "0.9rem", lineHeight: 1.6 }}>
                     {desc}
                   </Typography>
                 </Paper>
@@ -1331,8 +1308,8 @@ const LandingPage = () => {
         <Box
           component="section"
           sx={{
-            py: { xs: 12, md: 16 },
-            bgcolor: isDark ? DARK_BLUE : PRIMARY_BLUE,
+            py: { xs: 8, md: 10 },
+            bgcolor: PRIMARY_BLUE,
             color: CREAM,
             textAlign: "center",
           }}
@@ -1342,24 +1319,24 @@ const LandingPage = () => {
               component="h2"
               sx={{
                 fontWeight: 800,
-                fontSize: { xs: "2rem", md: "3rem" },
-                mb: 3,
+                fontSize: { xs: "1.75rem", md: "2.5rem" },
+                mb: 2,
                 lineHeight: 1.2,
               }}
             >
-              Ready to Transform Your Stock Analysis Strategy?
+              Ready to Transform Your Investment Strategy?
             </Typography>
             <Typography
               sx={{
                 color: hexToRgba(CREAM, 0.85),
-                fontSize: { xs: "1.1rem", md: "1.25rem" },
-                lineHeight: 1.7,
-                mb: 6,
+                fontSize: { xs: "1rem", md: "1.1rem" },
+                lineHeight: 1.6,
+                mb: 4,
                 maxWidth: 600,
                 mx: "auto",
               }}
             >
-              Join thousands of investors who are already making smarter decisions with AI-powered market analysis.
+              Join thousands of investors making smarter decisions with AI-powered market analysis.
             </Typography>
             <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
               <Button
@@ -1367,10 +1344,17 @@ const LandingPage = () => {
                 disableElevation
                 onClick={() => navigate("/register")}
                 sx={{
-                  ...solidBtn(makeTone(CREAM, PRIMARY_BLUE), true),
-                  px: 4,
-                  py: 1.5,
-                  fontSize: "1.1rem",
+                  bgcolor: WHITE,
+                  color: PRIMARY_BLUE,
+                  fontWeight: 700,
+                  textTransform: "none",
+                  px: 3,
+                  py: 1.2,
+                  borderRadius: 1,
+                  fontSize: "1rem",
+                  "&:hover": {
+                    bgcolor: hexToRgba(WHITE, 0.9),
+                  },
                 }}
               >
                 Get Started Free
@@ -1383,9 +1367,10 @@ const LandingPage = () => {
                   borderColor: CREAM,
                   fontWeight: 700,
                   textTransform: "none",
-                  px: 4,
-                  py: 1.5,
-                  fontSize: "1.1rem",
+                  px: 3,
+                  py: 1.2,
+                  borderRadius: 1,
+                  fontSize: "1rem",
                   "&:hover": {
                     borderColor: CREAM,
                     bgcolor: hexToRgba(CREAM, 0.1),
