@@ -34,25 +34,19 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
-
     primary: {
-      main: "#38bdf8",
-      light: "#7dd3fc",
-      dark: "#0284c7",
+      main: "#3B82F6",
+      dark: "#00245b",
     },
-
     background: {
-      default:
-        "linear-gradient(135deg, #050811 0%, #6c1af1 50%, #061124 100%)",
-      paper: "#0b1120",
+      default: "#041125",
+      paper: "#041125",
     },
-
     text: {
-      primary: "#f8fafc",
-      secondary: "#94a3b8",
+      primary: "#ffffff",
+      secondary: "#e1d7d7",
     },
   },
-
   typography: {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
   },
@@ -61,34 +55,45 @@ const darkTheme = createTheme({
 const inputFieldStyles = {
   "& .MuiInputBase-root": {
     color: "#ffffff",
-    backgroundColor: "rgba(15, 23, 42, 0.6)",
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
     borderRadius: "10px",
     transition: "all 0.25s ease-in-out",
     "&:hover": {
-      backgroundColor: "rgba(30, 41, 59, 0.7)",
+      backgroundColor: "rgba(255, 255, 255, 0.08)",
     },
     "&.Mui-focused": {
-      backgroundColor: "rgba(15, 23, 42, 0.85)",
-      boxShadow: "0 0 0 2px rgba(56, 189, 248, 0.4)",
+      backgroundColor: "rgba(255, 255, 255, 0.08)",
+    },
+  },
+  "& .MuiInputBase-input": {
+    color: "#ffffff",
+    "&::placeholder": {
+      color: "rgba(225, 215, 215, 0.6)",
+      opacity: 1,
     },
   },
   "& .MuiInputLabel-root": {
-    color: "#94a3b8",
-  },
-  "& .MuiInputLabel-root.Mui-focused": {
-    color: "#38bdf8",
+    color: "#e1d7d7",
+    "&.Mui-focused": {
+      color: "#3B82F6",
+    },
   },
   "& .MuiOutlinedInput-notchedOutline": {
-    borderColor: "rgba(255, 255, 255, 0.12)",
+    borderColor: "rgba(225, 215, 215, 0.3)",
+    transition: "border-color 0.2s ease-in-out",
   },
   "&:hover .MuiOutlinedInput-notchedOutline": {
-    borderColor: "rgba(56, 189, 248, 0.5)",
+    borderColor: "rgba(59, 130, 246, 0.6)",
   },
   "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-    borderColor: "#38bdf8",
+    borderColor: "#3B82F6",
+    borderWidth: "1.5px",
+  },
+  "& .MuiSelect-icon": {
+    color: "#e1d7d7",
   },
   "& input:-webkit-autofill": {
-    WebkitBoxShadow: "0 0 0 100px #0f172a inset !important",
+    WebkitBoxShadow: "0 0 0 100px #041125 inset !important",
     WebkitTextFillColor: "#ffffff !important",
   },
 };
@@ -198,7 +203,7 @@ const Signup = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #050811 0%, #6c1af1 50%, #061124 100%)",
+          background: "linear-gradient(135deg, #041125 0%, #00245b 100%)",
           py: 4,
           px: 2,
           "&::before": {
@@ -207,6 +212,7 @@ const Signup = () => {
             width: "500px",
             height: "500px",
             borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)",
             top: "-5%",
             left: "-5%",
             filter: "blur(40px)",
@@ -219,6 +225,7 @@ const Signup = () => {
             width: "500px",
             height: "500px",
             borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(0, 36, 91, 0.4) 0%, transparent 70%)",
             bottom: "-5%",
             right: "-5%",
             filter: "blur(40px)",
@@ -249,46 +256,47 @@ const Signup = () => {
               flexDirection: "column",
               alignItems: "center",
               width: "100%",
-              borderRadius: "20px",
-              backgroundColor: "rgba(15, 23, 42, 0.7)",
+              borderRadius: "16px",
+              backgroundColor: "rgba(4, 17, 37, 0.75)",
               backdropFilter: "blur(20px)",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px rgba(56, 189, 248, 0.08)",
+              border: "1px solid rgba(225, 215, 215, 0.15)",
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px rgba(59, 130, 246, 0.12)",
               animation: "cardEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            {/* Brand Header */}
+            {/* Exact Landing Page Matched Logo */}
             <Box
               sx={{
-                display: "flex",
+                display: "inline-flex",
                 alignItems: "center",
-                gap: 1.5,
-                mb: 1,
+                gap: 1.25,
+                mb: 1.5,
                 cursor: "pointer",
+                textDecoration: "none",
               }}
               onClick={() => navigate("/")}
             >
               <Box
                 sx={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: "12px",
-                  background: "linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  width: 42,
+                  height: 42,
+                  borderRadius: 2,
+                  bgcolor: "#00b0ff",
+                  display: "grid",
+                  placeItems: "center",
+                  boxShadow: "0 4px 12px rgba(0, 176, 255, 0.35)",
+                  flexShrink: 0,
                 }}
               >
-                <TrendingUpRounded sx={{ color: "#ffffff", fontSize: 26 }} />
+                <TrendingUpRounded sx={{ color: "#041125", fontSize: 26 }} />
               </Box>
               <Typography
-                variant="h5"
+                component="span"
                 sx={{
                   fontWeight: 800,
-                  letterSpacing: "0.5px",
-                  background: "linear-gradient(135deg, #ffffff 0%, #ffffff 50%, #ffffff 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
+                  fontSize: "1.35rem",
+                  letterSpacing: "-0.02em",
+                  color: "#ffffff",
                 }}
               >
                 WealthNova
@@ -299,7 +307,7 @@ const Signup = () => {
               variant="h6"
               sx={{
                 fontWeight: 700,
-                color: "#f8fafc",
+                color: "#ffffff",
                 mt: 1,
                 mb: 0.5,
               }}
@@ -309,9 +317,10 @@ const Signup = () => {
             <Typography
               variant="body2"
               sx={{
-                color: "#94a3b8",
+                color: "#e1d7d7",
                 mb: 2,
                 textAlign: "center",
+                opacity: 0.85,
               }}
             >
               Start tracking your stocks and managing your wealth
@@ -424,7 +433,7 @@ const Signup = () => {
 
               {/* Country */}
               <FormControl fullWidth margin="normal" sx={inputFieldStyles}>
-                <InputLabel id="country-label">Country</InputLabel>
+                <InputLabel id="country-label" sx={{ color: "#e1d7d7", "&.Mui-focused": { color: "#3B82F6" } }}>Country</InputLabel>
                 <Select
                   labelId="country-label"
                   id="country-select"
@@ -434,22 +443,22 @@ const Signup = () => {
                   onChange={handleChange}
                   startAdornment={
                     <InputAdornment position="start">
-                      <PublicRounded sx={{ color: "#94a3b8", fontSize: 20, ml: 1 }} />
+                      <PublicRounded sx={{ color: "#e1d7d7", fontSize: 20, ml: 1 }} />
                     </InputAdornment>
                   }
                   MenuProps={{
                     PaperProps: {
                       sx: {
-                        backgroundColor: "#0f172a",
-                        border: "1px solid rgba(255, 255, 255, 0.1)",
+                        backgroundColor: "#041125",
+                        border: "1px solid rgba(225, 215, 215, 0.2)",
                         color: "#ffffff",
                         "& .MuiMenuItem-root": {
-                          color: "#f8fafc",
+                          color: "#e1d7d7",
                           "&:hover": {
-                            backgroundColor: "rgba(56, 189, 248, 0.15)",
+                            backgroundColor: "rgba(59, 130, 246, 0.2)",
                           },
                           "&.Mui-selected": {
-                            backgroundColor: "rgba(2, 132, 199, 0.35)",
+                            backgroundColor: "rgba(59, 130, 246, 0.35)",
                           },
                         },
                       },
@@ -476,22 +485,25 @@ const Signup = () => {
                 sx={{
                   mt: 3,
                   mb: 2,
-                  py: 1.5,
-                  borderRadius: "12px",
+                  py: 1.4,
+                  borderRadius: "10px",
                   fontWeight: 700,
                   fontSize: "1rem",
-                  letterSpacing: "0.5px",
-                  background: "linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #4f46e5 100%)",
+                  letterSpacing: "0.3px",
+                  bgcolor: "#3B82F6",
                   color: "#ffffff",
-                  boxShadow: "0 10px 25px -5px rgba(37, 99, 235, 0.4)",
+                  textTransform: "none",
+                  boxShadow: "0 4px 14px rgba(37, 99, 235, 0.35)",
+                  transition: "all 0.2s ease-in-out",
                   "&:hover": {
-                    background: "linear-gradient(135deg, #0369a1 0%, #1d4ed8 50%, #4338ca 100%)",
-                    boxShadow: "0 15px 30px -5px rgba(37, 99, 235, 0.6)",
+                    bgcolor: "#2563EB",
+                    boxShadow: "0 6px 20px rgba(37, 99, 235, 0.5)",
                     transform: "translateY(-1px)",
                   },
-                  "&:disabled": {
-                    background: "rgba(30, 41, 59, 0.6)",
-                    color: "#64748b",
+                  "&.Mui-disabled": {
+                    bgcolor: "#3B82F6",
+                    color: "#ffffff",
+                    opacity: 0.7,
                   },
                 }}
               >
@@ -519,7 +531,6 @@ const Signup = () => {
                     borderRadius: "12px",
                     fontWeight: 500,
                     animation: "shake 0.4s ease-in-out",
-                    boxShadow: "0 4px 15px rgba(225, 29, 72, 0.2)",
                     "& .MuiAlert-icon": {
                       alignItems: "center",
                     },
@@ -552,7 +563,7 @@ const Signup = () => {
 
               {/* Back to Login link */}
               <Box sx={{ textAlign: "center", mt: 1 }}>
-                <Typography variant="body2" sx={{ color: "#94a3b8" }}>
+                <Typography variant="body2" sx={{ color: "#e1d7d7" }}>
                   Already have an account?{" "}
                   <Link
                     component={RouterLink}
@@ -560,9 +571,9 @@ const Signup = () => {
                     underline="none"
                     sx={{
                       fontWeight: 700,
-                      color: "#38bdf8",
+                      color: "#3B82F6",
                       transition: "color 0.2s",
-                      "&:hover": { color: "#7dd3fc", textDecoration: "underline" },
+                      "&:hover": { color: "#60a5fa", textDecoration: "underline" },
                     }}
                   >
                     Log In

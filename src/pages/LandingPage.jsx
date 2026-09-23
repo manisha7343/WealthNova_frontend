@@ -55,19 +55,79 @@ const MARKET = [
 ];
 
 const TOP_GAINERS = [
-  { name: "ICICI BANK", desc: "Private Sector Bank", price: "₹1,080.00", change: "+2.1%", volume: "12.5M" },
-  { name: "NIFTY IT", desc: "Tech Sector Index", price: "₹37,200.00", change: "+2.4%", volume: "8.2M" },
-  { name: "RELIANCE", desc: "Energy & Retail", price: "₹2,950.00", change: "+1.5%", volume: "15.8M" },
-  { name: "TCS", desc: "IT Consulting", price: "₹4,100.00", change: "+0.9%", volume: "5.3M" },
-  { name: "BHARTIARTL", desc: "Telecommunications", price: "₹1,150.00", change: "+0.7%", volume: "4.1M" },
+  {
+    name: "ICICI BANK",
+    desc: "Private Sector Bank",
+    price: "₹1,080.00",
+    change: "+2.1%",
+    volume: "12.5M",
+  },
+  {
+    name: "NIFTY IT",
+    desc: "Tech Sector Index",
+    price: "₹37,200.00",
+    change: "+2.4%",
+    volume: "8.2M",
+  },
+  {
+    name: "RELIANCE",
+    desc: "Energy & Retail",
+    price: "₹2,950.00",
+    change: "+1.5%",
+    volume: "15.8M",
+  },
+  {
+    name: "TCS",
+    desc: "IT Consulting",
+    price: "₹4,100.00",
+    change: "+0.9%",
+    volume: "5.3M",
+  },
+  {
+    name: "BHARTIARTL",
+    desc: "Telecommunications",
+    price: "₹1,150.00",
+    change: "+0.7%",
+    volume: "4.1M",
+  },
 ];
 
 const TOP_LOSERS = [
-  { name: "HDFC BANK", desc: "Private Sector Bank", price: "₹1,450.00", change: "-0.8%", volume: "18.2M" },
-  { name: "BANK NIFTY", desc: "Banking Index", price: "₹46,780.00", change: "-0.5%", volume: "22.1M" },
-  { name: "INFOSYS", desc: "IT Services", price: "₹1,650.00", change: "-0.3%", volume: "9.8M" },
-  { name: "SBI", desc: "Public Sector Bank", price: "₹750.00", change: "-0.2%", volume: "25.4M" },
-  { name: "ITC", desc: "FMCG & Tobacco", price: "₹410.00", change: "-0.4%", volume: "14.3M" },
+  {
+    name: "HDFC BANK",
+    desc: "Private Sector Bank",
+    price: "₹1,450.00",
+    change: "-0.8%",
+    volume: "18.2M",
+  },
+  {
+    name: "BANK NIFTY",
+    desc: "Banking Index",
+    price: "₹46,780.00",
+    change: "-0.5%",
+    volume: "22.1M",
+  },
+  {
+    name: "INFOSYS",
+    desc: "IT Services",
+    price: "₹1,650.00",
+    change: "-0.3%",
+    volume: "9.8M",
+  },
+  {
+    name: "SBI",
+    desc: "Public Sector Bank",
+    price: "₹750.00",
+    change: "-0.2%",
+    volume: "25.4M",
+  },
+  {
+    name: "ITC",
+    desc: "FMCG & Tobacco",
+    price: "₹410.00",
+    change: "-0.4%",
+    volume: "14.3M",
+  },
 ];
 
 const NEWS = [
@@ -189,11 +249,11 @@ const LEGAL_LINKS = [
 /* -------------------------------------------------------------------------- */
 
 const PRIMARY_BLUE = "#00245b";
-const DARK_BLUE = "#121214";
+const DARK_BLUE = "#041125";
 const LIGHT_BLUE = "#3B82F6";
 const CREAM = "#e1d7d7";
-const WHITE = "#d1c6c6";
-const ACCENT_BLUE = "#378df6";
+const WHITE = "#ffffff";
+const ACCENT_BLUE = "#3B82F6";
 
 const hexToRgba = (hex, a) => {
   const n = parseInt(hex.slice(1), 16);
@@ -219,45 +279,77 @@ const getTokens = () => ({
   accent: LIGHT_BLUE,
 });
 
-const solidBtn = (tone, accent = false) => {
-  const bgColor = accent ? tone.accent || tone.fg : tone.fg;
-  return {
-    bgcolor: bgColor,
-    color: tone.bg,
-    fontWeight: 700,
-    textTransform: "none",
-    borderRadius: 2,
-    px: 3,
-    py: 1.2,
-    boxShadow: accent
-      ? `0 4px 14px ${hexToRgba(bgColor, 0.4)}`
-      : "0 4px 14px rgba(0,0,0,0.15)",
-    "&:hover": {
-      bgcolor: bgColor,
-      transform: "translateY(-2px)",
-      boxShadow: accent
-        ? `0 6px 20px ${hexToRgba(bgColor, 0.5)}`
-        : "0 6px 20px rgba(0,0,0,0.2)",
-    },
-    "&:active": { transform: "translateY(0)" },
-    transition: "all 0.2s ease",
-    "&.Mui-disabled": {
-      bgcolor: tone.soft,
-      color: tone.muted,
-      boxShadow: "none",
-    },
-  };
-};
+// const solidBtn = (tone, accent = false) => {
+//   const bgColor = accent ? tone.accent || tone.fg : tone.fg;
+//   return {
+//     bgcolor: bgColor,
+//     color: tone.bg,
+//     fontWeight: 700,
+//     textTransform: "none",
+//     borderRadius: 2,
+//     px: 3,
+//     py: 1.2,
+//     boxShadow: accent
+//       ? `0 4px 14px ${hexToRgba(bgColor, 0.4)}`
+//       : "0 4px 14px rgba(0,0,0,0.15)",
+//     "&:hover": {
+//       bgcolor: bgColor,
+//       transform: "translateY(-2px)",
+//       boxShadow: accent
+//         ? `0 6px 20px ${hexToRgba(bgColor, 0.5)}`
+//         : "0 6px 20px rgba(0,0,0,0.2)",
+//     },
+//     "&:active": { transform: "translateY(0)" },
+//     transition: "all 0.2s ease",
+//     "&.Mui-disabled": {
+//       bgcolor: tone.soft,
+//       color: tone.muted,
+//       boxShadow: "none",
+//     },
+//   };
+// };
 
 const focusRing = (color) => ({
   "&:focus-visible": { outline: `2px solid ${color}`, outlineOffset: 2 },
 });
 
 /* -------------------------------------------------------------------------- */
+/* Scroll reveal: har element halka sa neeche se upar aata hai jab woh        */
+/* viewport me scroll ho kar aata hai (ek baar hi chalta hai).                */
+/* -------------------------------------------------------------------------- */
+
+const revealVariants = {
+  hidden: { opacity: 0, y: 28 },
+  show: (delay = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.1, delay, ease: [0.16, 1, 0.3, 1] },
+  }),
+};
+
+const Reveal = ({ children, delay = 0, amount = 0.2, once = true, sx }) => {
+  const reduceMotion = useReducedMotion();
+  if (reduceMotion) return <Box sx={sx}>{children}</Box>;
+  return (
+    <Box
+      component={motion.div}
+      custom={delay}
+      variants={revealVariants}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once, amount }}
+      sx={sx}
+    >
+      {children}
+    </Box>
+  );
+};
+
+/* -------------------------------------------------------------------------- */
 /* Components                                                                */
 /* -------------------------------------------------------------------------- */
 
-const Logo = ({ tone, size = 40 }) => (
+export const Logo = ({ tone = { fg: WHITE, bg: DARK_BLUE }, size = 40 }) => (
   <Link
     component={RouterLink}
     to="/"
@@ -267,9 +359,10 @@ const Logo = ({ tone, size = 40 }) => (
       display: "inline-flex",
       alignItems: "center",
       gap: 1.25,
-      color: tone.fg,
+      color: tone?.fg || WHITE,
       borderRadius: 1,
-      ...focusRing(tone.fg),
+      textDecoration: "none",
+      ...focusRing(tone?.fg || LIGHT_BLUE),
     }}
   >
     <Box
@@ -280,14 +373,22 @@ const Logo = ({ tone, size = 40 }) => (
         bgcolor: "#00b0ff",
         display: "grid",
         placeItems: "center",
-        boxShadow: `0 4px 12px ${hexToRgba(tone.fg, 0.3)}`,
+        boxShadow: `0 4px 12px rgba(0, 176, 255, 0.35)`,
+        flexShrink: 0,
       }}
     >
-      <TrendingUpIcon sx={{ color: tone.bg, fontSize: size * 0.6 }} />
+      <TrendingUpIcon
+        sx={{ color: tone?.bg || DARK_BLUE, fontSize: size * 0.6 }}
+      />
     </Box>
     <Typography
       component="span"
-      sx={{ fontWeight: 800, fontSize: size * 0.5, letterSpacing: "-0.02em" }}
+      sx={{
+        fontWeight: 800,
+        fontSize: size * 0.5,
+        letterSpacing: "-0.02em",
+        color: tone?.fg || WHITE,
+      }}
     >
       WealthNova
     </Typography>
@@ -421,8 +522,12 @@ const container = {
 };
 
 const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  hidden: { opacity: 0, y: 28 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+  },
 };
 
 const LandingPage = () => {
@@ -464,12 +569,10 @@ const LandingPage = () => {
   };
 
   const scrollToId = (id) =>
-    document
-      .getElementById(id)
-      ?.scrollIntoView({
-        behavior: reduceMotion ? "auto" : "smooth",
-        block: "start",
-      });
+    document.getElementById(id)?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
@@ -505,6 +608,19 @@ const LandingPage = () => {
         color: page.fg,
         transition: "background-color 0.3s ease, color 0.3s ease",
         overflowX: "hidden",
+        "@keyframes fadeInUp": {
+          "0%": {
+            opacity: 0,
+            transform: "translateY(24px)",
+          },
+          "100%": {
+            opacity: 1,
+            transform: "translateY(0)",
+          },
+        },
+        "& main > *": {
+          animation: "fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both",
+        },
         "& .MuiTypography-root, & .MuiButton-root, & .MuiInputBase-root, & .MuiChip-root":
           {
             fontFamily: FONT,
@@ -591,10 +707,10 @@ const LandingPage = () => {
             <Button
               variant="contained"
               disableElevation
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/signup")}
               sx={{
                 bgcolor: WHITE,
-                color: "#052659",
+                color: PRIMARY_BLUE,
                 fontWeight: 700,
                 textTransform: "none",
                 px: 2.5,
@@ -634,8 +750,9 @@ const LandingPage = () => {
             autoPlay={!reduceMotion}
             loop
             muted
+            defaultMuted
             playsInline
-            preload="metadata"
+            preload="auto"
             aria-hidden="true"
             sx={{
               position: "absolute",
@@ -643,6 +760,8 @@ const LandingPage = () => {
               width: "100%",
               height: "100%",
               objectFit: "cover",
+              zIndex: 0,
+              pointerEvents: "none",
             }}
           >
             <source src={HERO_VIDEO} type="video/mp4" />
@@ -770,9 +889,23 @@ const LandingPage = () => {
                     disableElevation
                     disabled={!query.trim()}
                     sx={{
-                      ...solidBtn(makeTone(CREAM, PRIMARY_BLUE), true),
+                      bgcolor: "#3B82F6",
+                      color: "#ffffff",
+                      fontWeight: 700,
+                      textTransform: "none",
                       px: 3.5,
                       py: 1.5,
+                      borderRadius: 1,
+                      transition: "all 0.2s ease-in-out",
+                      "&:hover": {
+                        bgcolor: "#2563EB",
+                        boxShadow: "0 4px 14px rgba(37, 99, 235, 0.4)",
+                      },
+                      "&.Mui-disabled": {
+                        bgcolor: "#3B82F6",
+                        color: "#ffffff",
+                        opacity: 0.85,
+                      },
                     }}
                   >
                     Search
@@ -819,18 +952,22 @@ const LandingPage = () => {
         </Box>
 
         {/* ------------------------- TOP GAINERS & LOSERS --------------------- */}
-        <Box component="section" id="gainers-losers" sx={{ ...section(page), py: { xs: 6, md: 10 } }}>
+        <Box
+          component="section"
+          id="gainers-losers"
+          sx={{ ...section(page), py: { xs: 6, md: 10 } }}
+        >
           <Container maxWidth="lg">
-            <Box 
-              sx={{ 
-                display: "flex", 
+            <Box
+              sx={{
+                display: "flex",
                 flexDirection: { xs: "column", md: "row" }, // Strict Left-Right for Desktop
-                alignItems: "center", 
-                gap: 6 
+                alignItems: "center",
+                gap: 6,
               }}
             >
               {/* LEFT HALF: Heading & Description (Takes 35% width) */}
-              <Box sx={{ flex: "0 0 35%", width: "100%" }}>
+              <Reveal sx={{ flex: "0 0 35%", width: "100%" }}>
                 <Chip
                   label="🔴 Live Market Data"
                   size="small"
@@ -850,7 +987,7 @@ const LandingPage = () => {
                     mb: 2,
                     fontSize: { xs: "2rem", md: "2.8rem" },
                     color: page.fg,
-                    lineHeight: 1.1
+                    lineHeight: 1.1,
                   }}
                 >
                   Market Movers
@@ -860,13 +997,20 @@ const LandingPage = () => {
                     ...subHeading,
                     fontSize: "1.05rem",
                     mb: 4,
-                    color: hexToRgba(CREAM, 0.8)
+                    color: hexToRgba(CREAM, 0.8),
                   }}
                 >
-                  Keep a pulse on the market's momentum. Track the biggest gainers and losers in real-time to identify emerging trends, spot breakout opportunities, and navigate market volatility like a pro.
+                  Keep a pulse on the market's momentum. Track the biggest
+                  gainers and losers in real-time to identify emerging trends,
+                  spot breakout opportunities, and navigate market volatility
+                  like a pro.
                 </Typography>
                 <Button
-                  onClick={() => document.getElementById("charts")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                  onClick={() =>
+                    document
+                      .getElementById("charts")
+                      ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                  }
                   sx={{
                     bgcolor: CREAM,
                     color: PRIMARY_BLUE,
@@ -880,135 +1024,252 @@ const LandingPage = () => {
                 >
                   Analyze on Charts →
                 </Button>
-              </Box>
+              </Reveal>
 
               {/* RIGHT HALF: Gainers & Losers Cards (Takes remaining width) */}
               <Box sx={{ flex: 1, width: "100%" }}>
-                <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 3 }}>
-                  
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
+                    gap: 3,
+                  }}
+                >
                   {/* GAINERS CARD (GREEN CONTAINER) */}
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      flex: 1,
-                      p: 2.5,
-                      bgcolor: "#023b20", // Deep Dark Green
-                      border: `1px solid #065f35`,
-                      borderRadius: 1, 
-                      transition: "all 0.3s ease",
-                      "&:hover": {
-                        transform: "translateY(-4px)",
-                        boxShadow: `0 12px 24px rgba(2, 59, 32, 0.4)`,
-                      },
-                    }}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2, pb: 1.5, borderBottom: `1px solid rgba(255,255,255,0.15)` }}>
-                      <Box sx={{ width: 32, height: 32, borderRadius: 1, bgcolor: "rgba(255,255,255,0.2)", display: "grid", placeItems: "center" }}>
-                        <ArrowDropUpIcon sx={{ color: "#4ade80", fontSize: 28 }} />
-                      </Box>
-                      <Typography variant="h6" sx={{ fontWeight: 800, color: "#4ade80", fontSize: "1.1rem" }}>
-                        Top Gainers
-                      </Typography>
-                    </Box>
-                    
-                    {TOP_GAINERS.map((stock, index) => (
+                  <Reveal delay={0.1} sx={{ flex: 1 }}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        flex: 1,
+                        p: 2.5,
+                        bgcolor: "#023b20", // Deep Dark Green
+                        border: `1px solid #065f35`,
+                        borderRadius: 1,
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-4px)",
+                          boxShadow: `0 12px 24px rgba(2, 59, 32, 0.4)`,
+                        },
+                      }}
+                    >
                       <Box
-                        key={stock.name}
                         sx={{
                           display: "flex",
-                          justifyContent: "space-between",
                           alignItems: "center",
-                          py: 1.5,
-                          borderBottom: index < TOP_GAINERS.length - 1 ? `1px solid rgba(255,255,255,0.1)` : "none",
-                          "&:hover": { bgcolor: "rgba(255,255,255,0.05)" },
-                          px: 1,
-                          borderRadius: 1,
-                          transition: "bgcolor 0.2s",
+                          gap: 1.5,
+                          mb: 2,
+                          pb: 1.5,
+                          borderBottom: `1px solid rgba(255,255,255,0.15)`,
                         }}
                       >
-                        <Box>
-                          <Typography sx={{ fontWeight: 700, fontSize: "0.95rem", color: CREAM }}>
-                            {stock.name}
-                          </Typography>
-                          <Typography sx={{ color: "rgba(255,255,255,0.6)", fontSize: "0.75rem", mt: 0.2 }}>
-                            {stock.desc}
-                          </Typography>
+                        <Box
+                          sx={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: 1,
+                            bgcolor: "rgba(255,255,255,0.2)",
+                            display: "grid",
+                            placeItems: "center",
+                          }}
+                        >
+                          <ArrowDropUpIcon
+                            sx={{ color: "#4ade80", fontSize: 28 }}
+                          />
                         </Box>
-                        <Box sx={{ textAlign: "right" }}>
-                          <Typography sx={{ fontWeight: 800, fontSize: "0.95rem", color: CREAM }}>
-                            {stock.price}
-                          </Typography>
-                          <Typography sx={{ color: "#4ade80", fontWeight: 800, fontSize: "0.8rem", mt: 0.2 }}>
-                            {stock.change}
-                          </Typography>
-                        </Box>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: 800,
+                            color: "#4ade80",
+                            fontSize: "1.1rem",
+                          }}
+                        >
+                          Top Gainers
+                        </Typography>
                       </Box>
-                    ))}
-                  </Paper>
+
+                      {TOP_GAINERS.map((stock, index) => (
+                        <Box
+                          key={stock.name}
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            py: 1.5,
+                            borderBottom:
+                              index < TOP_GAINERS.length - 1
+                                ? `1px solid rgba(255,255,255,0.1)`
+                                : "none",
+                            "&:hover": { bgcolor: "rgba(255,255,255,0.05)" },
+                            px: 1,
+                            borderRadius: 1,
+                            transition: "bgcolor 0.2s",
+                          }}
+                        >
+                          <Box>
+                            <Typography
+                              sx={{
+                                fontWeight: 700,
+                                fontSize: "0.95rem",
+                                color: CREAM,
+                              }}
+                            >
+                              {stock.name}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                color: "rgba(255,255,255,0.6)",
+                                fontSize: "0.75rem",
+                                mt: 0.2,
+                              }}
+                            >
+                              {stock.desc}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ textAlign: "right" }}>
+                            <Typography
+                              sx={{
+                                fontWeight: 800,
+                                fontSize: "0.95rem",
+                                color: CREAM,
+                              }}
+                            >
+                              {stock.price}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                color: "#4ade80",
+                                fontWeight: 800,
+                                fontSize: "0.8rem",
+                                mt: 0.2,
+                              }}
+                            >
+                              {stock.change}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Paper>
+                  </Reveal>
 
                   {/* LOSERS CARD (RED CONTAINER) */}
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      flex: 1,
-                      p: 2.5,
-                      bgcolor: "#4a0d0d", // Deep Dark Red
-                      border: `1px solid #7a1515`,
-                      borderRadius: 1, 
-                      transition: "all 0.3s ease",
-                      "&:hover": {
-                        transform: "translateY(-4px)",
-                        boxShadow: `0 12px 24px rgba(74, 13, 13, 0.4)`,
-                      },
-                    }}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2, pb: 1.5, borderBottom: `1px solid rgba(255,255,255,0.15)` }}>
-                      <Box sx={{ width: 32, height: 32, borderRadius: 1, bgcolor: "rgba(255,255,255,0.15)", display: "grid", placeItems: "center" }}>
-                        <ArrowDropDownIcon sx={{ color: "#f87171", fontSize: 28 }} />
-                      </Box>
-                      <Typography variant="h6" sx={{ fontWeight: 800, color: "#f87171", fontSize: "1.1rem" }}>
-                        Top Losers
-                      </Typography>
-                    </Box>
-
-                    {TOP_LOSERS.map((stock, index) => (
+                  <Reveal delay={0.2} sx={{ flex: 1 }}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        flex: 1,
+                        p: 2.5,
+                        bgcolor: "#4a0d0d", // Deep Dark Red
+                        border: `1px solid #7a1515`,
+                        borderRadius: 1,
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-4px)",
+                          boxShadow: `0 12px 24px rgba(74, 13, 13, 0.4)`,
+                        },
+                      }}
+                    >
                       <Box
-                        key={stock.name}
                         sx={{
                           display: "flex",
-                          justifyContent: "space-between",
                           alignItems: "center",
-                          py: 1.5,
-                          borderBottom: index < TOP_LOSERS.length - 1 ? `1px solid rgba(255,255,255,0.1)` : "none",
-                          "&:hover": { bgcolor: "rgba(255,255,255,0.05)" },
-                          px: 1,
-                          borderRadius: 1,
-                          transition: "bgcolor 0.2s",
+                          gap: 1.5,
+                          mb: 2,
+                          pb: 1.5,
+                          borderBottom: `1px solid rgba(255,255,255,0.15)`,
                         }}
                       >
-                        <Box>
-                          <Typography sx={{ fontWeight: 700, fontSize: "0.95rem", color: CREAM }}>
-                            {stock.name}
-                          </Typography>
-                          <Typography sx={{ color: "rgba(255,255,255,0.6)", fontSize: "0.75rem", mt: 0.2 }}>
-                            {stock.desc}
-                          </Typography>
+                        <Box
+                          sx={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: 1,
+                            bgcolor: "rgba(255,255,255,0.15)",
+                            display: "grid",
+                            placeItems: "center",
+                          }}
+                        >
+                          <ArrowDropDownIcon
+                            sx={{ color: "#f87171", fontSize: 28 }}
+                          />
                         </Box>
-                        <Box sx={{ textAlign: "right" }}>
-                          <Typography sx={{ fontWeight: 800, fontSize: "0.95rem", color: CREAM }}>
-                            {stock.price}
-                          </Typography>
-                          <Typography sx={{ color: "#f87171", fontWeight: 800, fontSize: "0.8rem", mt: 0.2 }}>
-                            {stock.change}
-                          </Typography>
-                        </Box>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: 800,
+                            color: "#f87171",
+                            fontSize: "1.1rem",
+                          }}
+                        >
+                          Top Losers
+                        </Typography>
                       </Box>
-                    ))}
-                  </Paper>
 
+                      {TOP_LOSERS.map((stock, index) => (
+                        <Box
+                          key={stock.name}
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            py: 1.5,
+                            borderBottom:
+                              index < TOP_LOSERS.length - 1
+                                ? `1px solid rgba(255,255,255,0.1)`
+                                : "none",
+                            "&:hover": { bgcolor: "rgba(255,255,255,0.05)" },
+                            px: 1,
+                            borderRadius: 1,
+                            transition: "bgcolor 0.2s",
+                          }}
+                        >
+                          <Box>
+                            <Typography
+                              sx={{
+                                fontWeight: 700,
+                                fontSize: "0.95rem",
+                                color: CREAM,
+                              }}
+                            >
+                              {stock.name}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                color: "rgba(255,255,255,0.6)",
+                                fontSize: "0.75rem",
+                                mt: 0.2,
+                              }}
+                            >
+                              {stock.desc}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ textAlign: "right" }}>
+                            <Typography
+                              sx={{
+                                fontWeight: 800,
+                                fontSize: "0.95rem",
+                                color: CREAM,
+                              }}
+                            >
+                              {stock.price}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                color: "#f87171",
+                                fontWeight: 800,
+                                fontSize: "0.8rem",
+                                mt: 0.2,
+                              }}
+                            >
+                              {stock.change}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Paper>
+                  </Reveal>
                 </Box>
               </Box>
-              
             </Box>
           </Container>
         </Box>
@@ -1036,113 +1297,125 @@ const LandingPage = () => {
               </Typography> */}
 
               {/* CHART WALA PERSONAL SEARCH BOX */}
-              <Paper
-                component="form"
-                onSubmit={handleChartSearchSubmit}
-                elevation={0}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  width: { xs: "100%", md: "500px" }, // Center me thoda bada acha lagega
-                  p: 0.5,
-                  pl: 2,
-                  bgcolor: hexToRgba("white", 0.05), // Transparent off-white
-                  border: `1px solid ${hexToRgba("white", 0.2)}`,
-                  borderRadius: 1, // Sharp radius
-                  "&:focus-within": { borderColor: "white" },
-                }}
-              >
-                <SearchIcon sx={{ color: page.muted, mr: 1.5 }} />
-                <InputBase
-                  value={chartInput}
-                  onChange={(e) => setChartInput(e.target.value)}
-                  placeholder="Search company (e.g. HDFC, TCS)"
-                  sx={{ flex: 1, color: "white", fontSize: "1rem" }}
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disableElevation
-                  disabled={!chartInput.trim()}
+              <Reveal>
+                <Paper
+                  component="form"
+                  onSubmit={handleChartSearchSubmit}
+                  elevation={0}
                   sx={{
-                    bgcolor: CREAM,
-                    color: PRIMARY_BLUE,
-                    fontWeight: 700,
-                    textTransform: "none",
-                    borderRadius: 1,
-                    px: 4,
-                    py: 1,
-                    "&:hover": { bgcolor: hexToRgba(CREAM, 0.9) },
-                    "&.Mui-disabled": { bgcolor: "white", color: PRIMARY_BLUE },
+                    display: "flex",
+                    alignItems: "center",
+                    width: { xs: "100%", md: "500px" }, // Center me thoda bada acha lagega
+                    p: 0.5,
+                    pl: 2,
+                    bgcolor: hexToRgba("white", 0.05), // Transparent off-white
+                    border: `1px solid ${hexToRgba("white", 0.2)}`,
+                    borderRadius: 1, // Sharp radius
+                    "&:focus-within": { borderColor: "white" },
                   }}
                 >
-                  Search
-                </Button>
-              </Paper>
+                  <SearchIcon sx={{ color: page.muted, mr: 1.5 }} />
+                  <InputBase
+                    value={chartInput}
+                    onChange={(e) => setChartInput(e.target.value)}
+                    placeholder="Search company (e.g. HDFC, TCS)"
+                    sx={{ flex: 1, color: "white", fontSize: "1rem" }}
+                  />
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    disableElevation
+                    disabled={!chartInput.trim()}
+                    sx={{
+                      bgcolor: "#3B82F6",
+                      color: "#ffffff",
+                      fontWeight: 700,
+                      textTransform: "none",
+                      borderRadius: 1,
+                      px: 4,
+                      py: 1,
+                      transition: "all 0.2s ease-in-out",
+                      "&:hover": {
+                        bgcolor: "#2563EB",
+                        boxShadow: "0 4px 14px rgba(37, 99, 235, 0.4)",
+                      },
+                      "&.Mui-disabled": {
+                        bgcolor: "#3B82F6",
+                        color: "#ffffff",
+                        opacity: 0.85,
+                      },
+                    }}
+                  >
+                    Search
+                  </Button>
+                </Paper>
+              </Reveal>
             </Box>
 
             {/* TRANSPARENT TRADINGVIEW WIDGET */}
-            <Box
-              sx={{
-                width: "100%",
-                height: { xs: 300, md: 550 },
-                borderRadius: 0,
-                overflow: "hidden",
-                boxShadow: "0 10px 30px rgba(31, 31, 33, 0.25)",
-              }}
-              ref={(elem) => {
-                if (elem && elem.children.length === 0) {
-                  const script = document.createElement("script");
-                  script.src =
-                    "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-                  script.type = "text/javascript";
-                  script.async = true;
-                  script.innerHTML = JSON.stringify({
-                    autosize: true,
-                    symbol:
-                      chartSymbol === "NIFTY 50" ? "BSE:SENSEX" : chartSymbol,
-                    interval: "D",
-                    timezone: "Asia/Kolkata",
-                    theme: "dark",
-                    style: "1",
-                    locale: "in",
-                    enable_publishing: false,
-                    backgroundColor: "rgba(0, 0, 0, 0)", // Transparent background
-                    gridColor: "rgba(255, 255, 255, 0.05)",
-                    hide_top_toolbar: false,
-                    hide_legend: false,
-                    save_image: false,
-                    support_host: "https://www.tradingview.com",
-                  });
-                  elem.appendChild(script);
-                } else if (elem && elem.children.length > 0) {
-                  elem.innerHTML = "";
-                  const script = document.createElement("script");
-                  script.src =
-                    "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-                  script.type = "text/javascript";
-                  script.async = true;
-                  script.innerHTML = JSON.stringify({
-                    autosize: true,
-                    symbol:
-                      chartSymbol === "NIFTY 50" ? "BSE:SENSEX" : chartSymbol,
-                    interval: "D",
-                    timezone: "Asia/Kolkata",
-                    theme: "dark",
-                    style: "1",
-                    locale: "in",
-                    enable_publishing: false,
-                    backgroundColor: "rgba(0, 0, 0, 0)",
-                    gridColor: "rgba(255, 255, 255, 0.05)",
-                    hide_top_toolbar: false,
-                    hide_legend: false,
-                    save_image: false,
-                    support_host: "https://www.tradingview.com",
-                  });
-                  elem.appendChild(script);
-                }
-              }}
-            />
+            <Reveal delay={0.15}>
+              <Box
+                sx={{
+                  width: "100%",
+                  height: { xs: 300, md: 550 },
+                  borderRadius: 0,
+                  overflow: "hidden",
+                  boxShadow: "0 10px 30px rgba(31, 31, 33, 0.25)",
+                }}
+                ref={(elem) => {
+                  if (elem && elem.children.length === 0) {
+                    const script = document.createElement("script");
+                    script.src =
+                      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+                    script.type = "text/javascript";
+                    script.async = true;
+                    script.innerHTML = JSON.stringify({
+                      autosize: true,
+                      symbol:
+                        chartSymbol === "NIFTY 50" ? "BSE:SENSEX" : chartSymbol,
+                      interval: "D",
+                      timezone: "Asia/Kolkata",
+                      theme: "dark",
+                      style: "1",
+                      locale: "in",
+                      enable_publishing: false,
+                      backgroundColor: "rgba(0, 0, 0, 0)", // Transparent background
+                      gridColor: "rgba(255, 255, 255, 0.05)",
+                      hide_top_toolbar: false,
+                      hide_legend: false,
+                      save_image: false,
+                      support_host: "https://www.tradingview.com",
+                    });
+                    elem.appendChild(script);
+                  } else if (elem && elem.children.length > 0) {
+                    elem.innerHTML = "";
+                    const script = document.createElement("script");
+                    script.src =
+                      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+                    script.type = "text/javascript";
+                    script.async = true;
+                    script.innerHTML = JSON.stringify({
+                      autosize: true,
+                      symbol:
+                        chartSymbol === "NIFTY 50" ? "BSE:SENSEX" : chartSymbol,
+                      interval: "D",
+                      timezone: "Asia/Kolkata",
+                      theme: "dark",
+                      style: "1",
+                      locale: "in",
+                      enable_publishing: false,
+                      backgroundColor: "rgba(0, 0, 0, 0)",
+                      gridColor: "rgba(255, 255, 255, 0.05)",
+                      hide_top_toolbar: false,
+                      hide_legend: false,
+                      save_image: false,
+                      support_host: "https://www.tradingview.com",
+                    });
+                    elem.appendChild(script);
+                  }
+                }}
+              />
+            </Reveal>
           </Container>
         </Box>
 
@@ -1153,7 +1426,7 @@ const LandingPage = () => {
           sx={{ ...section(page), py: { xs: 6, md: 8 } }}
         >
           <Container maxWidth="lg">
-            <Box sx={{ textAlign: "center", mb: 6 }}>
+            <Reveal sx={{ textAlign: "center", mb: 6 }}>
               <Typography
                 component="h2"
                 sx={{
@@ -1175,7 +1448,7 @@ const LandingPage = () => {
               >
                 Latest market developments and corporate announcements.
               </Typography>
-            </Box>
+            </Reveal>
             <Box
               sx={{
                 display: "grid",
@@ -1187,99 +1460,100 @@ const LandingPage = () => {
                 },
               }}
             >
-              {NEWS.map((n) => (
-                <Card
-                  key={n.id}
-                  elevation={0}
-                  component="a"
-                  href={n.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{
-                    overflow: "hidden",
-                    bgcolor: card.bg,
-                    color: card.fg,
-                    borderRadius: 1,
-                    border: `1px solid ${card.border}`,
-                    transition: "all 0.3s ease",
-                    cursor: "pointer",
-                    textDecoration: "none",
-                    "&:hover": {
-                      transform: "translateY(-4px)",
-                      boxShadow: `0 12px 32px ${hexToRgba(PRIMARY_BLUE, 0.15)}`,
-                      borderColor: PRIMARY_BLUE,
-                    },
-                  }}
-                >
-                  <Box
+              {NEWS.map((n, i) => (
+                <Reveal key={n.id} delay={i * 0.08}>
+                  <Card
+                    elevation={0}
+                    component="a"
+                    href={n.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     sx={{
-                      height: 140,
-                      position: "relative",
                       overflow: "hidden",
+                      bgcolor: card.bg,
+                      color: card.fg,
+                      borderRadius: 1,
+                      border: `1px solid ${card.border}`,
+                      transition: "all 0.3s ease",
+                      cursor: "pointer",
+                      textDecoration: "none",
+                      "&:hover": {
+                        transform: "translateY(-4px)",
+                        boxShadow: `0 12px 32px ${hexToRgba(PRIMARY_BLUE, 0.15)}`,
+                        borderColor: PRIMARY_BLUE,
+                      },
                     }}
                   >
                     <Box
-                      component="img"
-                      src={n.img}
-                      alt=""
-                      loading="lazy"
                       sx={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        display: "block",
-                        transition: "transform 0.3s ease",
-                        "&:hover": { transform: "scale(1.05)" },
-                      }}
-                    />
-                    <Chip
-                      label={n.category}
-                      size="small"
-                      sx={{
-                        position: "absolute",
-                        top: 8,
-                        left: 8,
-                        bgcolor: hexToRgba(PRIMARY_BLUE, 0.9),
-                        color: CREAM,
-                        fontWeight: 600,
-                        fontSize: "0.7rem",
-                        height: 20,
-                      }}
-                    />
-                  </Box>
-                  <Box sx={{ p: 2 }}>
-                    <Typography
-                      sx={{
-                        color: page.muted,
-                        fontSize: "0.75rem",
-                        mb: 0.5,
-                        fontWeight: 500,
+                        height: 140,
+                        position: "relative",
+                        overflow: "hidden",
                       }}
                     >
-                      {n.date}
-                    </Typography>
-                    <Typography
-                      component="h3"
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: "0.9rem",
-                        lineHeight: 1.3,
-                        mb: 1,
-                      }}
-                    >
-                      {n.title}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        color: page.muted,
-                        fontSize: "0.8rem",
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {n.description}
-                    </Typography>
-                  </Box>
-                </Card>
+                      <Box
+                        component="img"
+                        src={n.img}
+                        alt=""
+                        loading="lazy"
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: "block",
+                          transition: "transform 0.3s ease",
+                          "&:hover": { transform: "scale(1.05)" },
+                        }}
+                      />
+                      <Chip
+                        label={n.category}
+                        size="small"
+                        sx={{
+                          position: "absolute",
+                          top: 8,
+                          left: 8,
+                          bgcolor: hexToRgba(PRIMARY_BLUE, 0.9),
+                          color: CREAM,
+                          fontWeight: 600,
+                          fontSize: "0.7rem",
+                          height: 20,
+                        }}
+                      />
+                    </Box>
+                    <Box sx={{ p: 2 }}>
+                      <Typography
+                        sx={{
+                          color: page.muted,
+                          fontSize: "0.75rem",
+                          mb: 0.5,
+                          fontWeight: 500,
+                        }}
+                      >
+                        {n.date}
+                      </Typography>
+                      <Typography
+                        component="h3"
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: "0.9rem",
+                          lineHeight: 1.3,
+                          mb: 1,
+                        }}
+                      >
+                        {n.title}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          color: page.muted,
+                          fontSize: "0.8rem",
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {n.description}
+                      </Typography>
+                    </Box>
+                  </Card>
+                </Reveal>
               ))}
             </Box>
           </Container>
@@ -1292,7 +1566,7 @@ const LandingPage = () => {
           sx={{ ...section(band), py: { xs: 6, md: 8 } }}
         >
           <Container maxWidth="lg">
-            <Box sx={{ textAlign: "center", mb: 6 }}>
+            <Reveal sx={{ textAlign: "center", mb: 6 }}>
               <Typography
                 component="h2"
                 sx={{
@@ -1315,7 +1589,7 @@ const LandingPage = () => {
               >
                 Get started in minutes. No complex setup required.
               </Typography>
-            </Box>
+            </Reveal>
 
             <Box
               sx={{
@@ -1325,77 +1599,78 @@ const LandingPage = () => {
               }}
             >
               {STEPS.map((step, i) => (
-                <Box
-                  key={step.title}
-                  sx={{
-                    position: "relative",
-                    p: 3,
-                    bgcolor: hexToRgba(DARK_BLUE, 0.4),
-                    border: `1px solid ${hexToRgba(CREAM, 0.2)}`,
-                    borderRadius: 1,
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-4px)",
-                      boxShadow: `0 12px 32px ${hexToRgba(PRIMARY_BLUE, 0.3)}`,
-                      borderColor: hexToRgba(CREAM, 0.4),
-                    },
-                  }}
-                >
+                <Reveal key={step.title} delay={i * 0.1}>
                   <Box
                     sx={{
-                      position: "absolute",
-                      top: -16,
-                      left: 16,
-                      width: 32,
-                      height: 32,
-                      borderRadius: "50%",
-                      bgcolor: CREAM,
-                      color: PRIMARY_BLUE,
-                      display: "grid",
-                      placeItems: "center",
-                      fontWeight: 800,
-                      fontSize: "1rem",
-                      boxShadow: `0 4px 12px ${hexToRgba(CREAM, 0.3)}`,
+                      position: "relative",
+                      p: 3,
+                      bgcolor: hexToRgba(DARK_BLUE, 0.4),
+                      border: `1px solid ${hexToRgba(CREAM, 0.2)}`,
+                      borderRadius: 1,
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        transform: "translateY(-4px)",
+                        boxShadow: `0 12px 32px ${hexToRgba(PRIMARY_BLUE, 0.3)}`,
+                        borderColor: hexToRgba(CREAM, 0.4),
+                      },
                     }}
                   >
-                    {i + 1}
-                  </Box>
-                  <Box sx={{ mt: 1, mb: 2 }}>
                     <Box
                       sx={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: 1,
-                        bgcolor: hexToRgba(CREAM, 0.15),
+                        position: "absolute",
+                        top: -16,
+                        left: 16,
+                        width: 32,
+                        height: 32,
+                        borderRadius: "50%",
+                        bgcolor: CREAM,
+                        color: PRIMARY_BLUE,
                         display: "grid",
                         placeItems: "center",
-                        mb: 2,
+                        fontWeight: 800,
+                        fontSize: "1rem",
+                        boxShadow: `0 4px 12px ${hexToRgba(CREAM, 0.3)}`,
                       }}
                     >
-                      <step.icon sx={{ color: CREAM, fontSize: 28 }} />
+                      {i + 1}
                     </Box>
+                    <Box sx={{ mt: 1, mb: 2 }}>
+                      <Box
+                        sx={{
+                          width: 48,
+                          height: 48,
+                          borderRadius: 1,
+                          bgcolor: hexToRgba(CREAM, 0.15),
+                          display: "grid",
+                          placeItems: "center",
+                          mb: 2,
+                        }}
+                      >
+                        <step.icon sx={{ color: CREAM, fontSize: 28 }} />
+                      </Box>
+                    </Box>
+                    <Typography
+                      component="h3"
+                      sx={{
+                        fontWeight: 700,
+                        fontSize: "1.1rem",
+                        mb: 1,
+                        color: CREAM,
+                      }}
+                    >
+                      {step.title}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        color: hexToRgba(CREAM, 0.8),
+                        fontSize: "0.9rem",
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      {step.desc}
+                    </Typography>
                   </Box>
-                  <Typography
-                    component="h3"
-                    sx={{
-                      fontWeight: 700,
-                      fontSize: "1.1rem",
-                      mb: 1,
-                      color: CREAM,
-                    }}
-                  >
-                    {step.title}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      color: hexToRgba(CREAM, 0.8),
-                      fontSize: "0.9rem",
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    {step.desc}
-                  </Typography>
-                </Box>
+                </Reveal>
               ))}
             </Box>
           </Container>
@@ -1408,7 +1683,7 @@ const LandingPage = () => {
           sx={{ ...section(page), py: { xs: 6, md: 8 } }}
         >
           <Container maxWidth="lg">
-            <Box sx={{ textAlign: "center", mb: 6 }}>
+            <Reveal sx={{ textAlign: "center", mb: 6 }}>
               <Typography
                 component="h2"
                 sx={{
@@ -1431,7 +1706,7 @@ const LandingPage = () => {
                 Everything you need to analyze, track, and optimize your
                 investments.
               </Typography>
-            </Box>
+            </Reveal>
 
             <Box
               sx={{
@@ -1444,70 +1719,71 @@ const LandingPage = () => {
                 },
               }}
             >
-              {FEATURES.map(({ Icon, title, desc, color }) => (
-                <Paper
-                  key={title}
-                  elevation={0}
-                  sx={{
-                    p: 3,
-                    bgcolor: card.bg,
-                    color: card.fg,
-                    border: `1px solid ${card.border}`,
-                    borderRadius: 1,
-                    transition: "all 0.3s ease",
-                    position: "relative",
-                    overflow: "hidden",
-                    "&:hover": {
-                      transform: "translateY(-4px)",
-                      boxShadow: `0 12px 32px ${hexToRgba(color, 0.15)}`,
-                      borderColor: PRIMARY_BLUE,
-                    },
-                    "&::before": {
-                      content: '""',
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: 3,
-                      bgcolor: color,
-                      transform: "scaleX(0)",
-                      transformOrigin: "left",
-                      transition: "transform 0.3s ease",
-                    },
-                    "&:hover::before": {
-                      transform: "scaleX(1)",
-                    },
-                  }}
-                >
-                  <Box
+              {FEATURES.map(({ Icon, title, desc, color }, i) => (
+                <Reveal key={title} delay={i * 0.08}>
+                  <Paper
+                    elevation={0}
                     sx={{
-                      width: 48,
-                      height: 48,
+                      p: 3,
+                      bgcolor: card.bg,
+                      color: card.fg,
+                      border: `1px solid ${card.border}`,
                       borderRadius: 1,
-                      bgcolor: hexToRgba(color, 0.15),
-                      display: "grid",
-                      placeItems: "center",
-                      mb: 2,
+                      transition: "all 0.3s ease",
+                      position: "relative",
+                      overflow: "hidden",
+                      "&:hover": {
+                        transform: "translateY(-4px)",
+                        boxShadow: `0 12px 32px ${hexToRgba(color, 0.15)}`,
+                        borderColor: PRIMARY_BLUE,
+                      },
+                      "&::before": {
+                        content: '""',
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: 3,
+                        bgcolor: color,
+                        transform: "scaleX(0)",
+                        transformOrigin: "left",
+                        transition: "transform 0.3s ease",
+                      },
+                      "&:hover::before": {
+                        transform: "scaleX(1)",
+                      },
                     }}
                   >
-                    <Icon sx={{ color: color, fontSize: 28 }} />
-                  </Box>
-                  <Typography
-                    component="h3"
-                    sx={{ fontWeight: 700, fontSize: "1.1rem", mb: 1 }}
-                  >
-                    {title}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      color: page.muted,
-                      fontSize: "0.9rem",
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    {desc}
-                  </Typography>
-                </Paper>
+                    <Box
+                      sx={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: 1,
+                        bgcolor: hexToRgba(color, 0.15),
+                        display: "grid",
+                        placeItems: "center",
+                        mb: 2,
+                      }}
+                    >
+                      <Icon sx={{ color: color, fontSize: 28 }} />
+                    </Box>
+                    <Typography
+                      component="h3"
+                      sx={{ fontWeight: 700, fontSize: "1.1rem", mb: 1 }}
+                    >
+                      {title}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        color: page.muted,
+                        fontSize: "0.9rem",
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      {desc}
+                    </Typography>
+                  </Paper>
+                </Reveal>
               ))}
             </Box>
           </Container>
@@ -1524,79 +1800,85 @@ const LandingPage = () => {
           }}
         >
           <Container maxWidth="md">
-            <Typography
-              component="h2"
-              sx={{
-                fontWeight: 800,
-                fontSize: { xs: "1.75rem", md: "2.5rem" },
-                mb: 2,
-                lineHeight: 1.2,
-              }}
-            >
-              Ready to Transform Your Investment Strategy?
-            </Typography>
-            <Typography
-              sx={{
-                color: hexToRgba(CREAM, 0.85),
-                fontSize: { xs: "1rem", md: "1.1rem" },
-                lineHeight: 1.6,
-                mb: 4,
-                maxWidth: 600,
-                mx: "auto",
-              }}
-            >
-              Join thousands of investors making smarter decisions with
-              AI-powered market analysis.
-            </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                gap: 2,
-                justifyContent: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              <Button
-                variant="contained"
-                disableElevation
-                onClick={() => navigate("/register")}
+            <Reveal>
+              <Typography
+                component="h2"
                 sx={{
-                  bgcolor: WHITE,
-                  color: PRIMARY_BLUE,
-                  fontWeight: 700,
-                  textTransform: "none",
-                  px: 3,
-                  py: 1.2,
-                  borderRadius: 1,
-                  fontSize: "1rem",
-                  "&:hover": {
-                    bgcolor: hexToRgba(WHITE, 0.9),
-                  },
+                  fontWeight: 800,
+                  fontSize: { xs: "1.75rem", md: "2.5rem" },
+                  mb: 2,
+                  lineHeight: 1.2,
                 }}
               >
-                Get Started Free
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => navigate("/login")}
+                Ready to Transform Your Investment Strategy?
+              </Typography>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <Typography
                 sx={{
-                  color: CREAM,
-                  borderColor: CREAM,
-                  fontWeight: 700,
-                  textTransform: "none",
-                  px: 3,
-                  py: 1.2,
-                  borderRadius: 1,
-                  fontSize: "1rem",
-                  "&:hover": {
+                  color: hexToRgba(CREAM, 0.85),
+                  fontSize: { xs: "1rem", md: "1.1rem" },
+                  lineHeight: 1.6,
+                  mb: 4,
+                  maxWidth: 600,
+                  mx: "auto",
+                }}
+              >
+                Join thousands of investors making smarter decisions with
+                AI-powered market analysis.
+              </Typography>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  justifyContent: "center",
+                  flexWrap: "wrap",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  disableElevation
+                  onClick={() => navigate("/signup")}
+                  sx={{
+                    bgcolor: WHITE,
+                    color: PRIMARY_BLUE,
+                    fontWeight: 700,
+                    textTransform: "none",
+                    px: 3,
+                    py: 1.2,
+                    borderRadius: 1,
+                    fontSize: "1rem",
+                    "&:hover": {
+                      bgcolor: hexToRgba(WHITE, 0.9),
+                    },
+                  }}
+                >
+                  Get Started Free
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => navigate("/login")}
+                  sx={{
+                    color: CREAM,
                     borderColor: CREAM,
-                    bgcolor: hexToRgba(CREAM, 0.1),
-                  },
-                }}
-              >
-                View Demo
-              </Button>
-            </Box>
+                    fontWeight: 700,
+                    textTransform: "none",
+                    px: 3,
+                    py: 1.2,
+                    borderRadius: 1,
+                    fontSize: "1rem",
+                    "&:hover": {
+                      borderColor: CREAM,
+                      bgcolor: hexToRgba(CREAM, 0.1),
+                    },
+                  }}
+                >
+                  View Demo
+                </Button>
+              </Box>
+            </Reveal>
           </Container>
         </Box>
       </main>
@@ -1607,75 +1889,83 @@ const LandingPage = () => {
         sx={{ bgcolor: band.bg, color: band.fg, pt: 10, pb: 6 }}
       >
         <Container maxWidth="lg">
-          <Box
-            sx={{
-              display: "grid",
-              gap: 6,
-              gridTemplateColumns: { xs: "1fr", md: "2fr 1fr 1fr" },
-              mb: 8,
-            }}
-          >
-            <Box>
-              <Box sx={{ mb: 3 }}>
-                <Logo tone={band} size={36} />
+          <Reveal>
+            <Box
+              sx={{
+                display: "grid",
+                gap: 6,
+                gridTemplateColumns: { xs: "1fr", md: "2fr 1fr 1fr" },
+                mb: 8,
+              }}
+            >
+              <Box>
+                <Box sx={{ mb: 3 }}>
+                  <Logo tone={band} size={36} />
+                </Box>
+                <Typography
+                  sx={{
+                    color: band.muted,
+                    maxWidth: 380,
+                    fontSize: "0.95rem",
+                    lineHeight: 1.7,
+                    mb: 3,
+                  }}
+                >
+                  WealthNova provides Indian investors with professional-grade
+                  market analysis, AI-powered predictions, and comprehensive
+                  portfolio management tools. Make informed investment decisions
+                  with data-driven insights.
+                </Typography>
+                <Box sx={{ display: "flex", gap: 2 }}>
+                  <Chip
+                    label="NSE"
+                    size="small"
+                    sx={{ bgcolor: band.soft, color: band.fg, fontWeight: 600 }}
+                  />
+                  <Chip
+                    label="BSE"
+                    size="small"
+                    sx={{ bgcolor: band.soft, color: band.fg, fontWeight: 600 }}
+                  />
+                  <Chip
+                    label="MCX"
+                    size="small"
+                    sx={{ bgcolor: band.soft, color: band.fg, fontWeight: 600 }}
+                  />
+                </Box>
               </Box>
+              <FooterLinks
+                title="Platform"
+                links={PLATFORM_LINKS}
+                tone={band}
+              />
+              <FooterLinks title="Legal" links={LEGAL_LINKS} tone={band} />
+            </Box>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <Box sx={{ borderTop: `1px solid ${band.border}`, pt: 4 }}>
               <Typography
                 sx={{
                   color: band.muted,
-                  maxWidth: 380,
-                  fontSize: "0.95rem",
+                  fontSize: "0.85rem",
                   lineHeight: 1.7,
-                  mb: 3,
+                  maxWidth: 900,
+                  mb: 2,
                 }}
               >
-                WealthNova provides Indian investors with professional-grade
-                market analysis, AI-powered predictions, and comprehensive
-                portfolio management tools. Make informed investment decisions
-                with data-driven insights.
+                Disclaimer: Predictions and analytics on WealthNova are for
+                educational and informational purposes only and should not be
+                considered as investment advice. Always conduct your own
+                research and consult with a qualified financial advisor before
+                making investment decisions.
               </Typography>
-              <Box sx={{ display: "flex", gap: 2 }}>
-                <Chip
-                  label="NSE"
-                  size="small"
-                  sx={{ bgcolor: band.soft, color: band.fg, fontWeight: 600 }}
-                />
-                <Chip
-                  label="BSE"
-                  size="small"
-                  sx={{ bgcolor: band.soft, color: band.fg, fontWeight: 600 }}
-                />
-                <Chip
-                  label="MCX"
-                  size="small"
-                  sx={{ bgcolor: band.soft, color: band.fg, fontWeight: 600 }}
-                />
-              </Box>
+              <Typography sx={{ color: band.muted, fontSize: "0.85rem" }}>
+                © {new Date().getFullYear()} WealthNova. All rights reserved.
+                Built with ❤️ for Indian investors.
+              </Typography>
             </Box>
-            <FooterLinks title="Platform" links={PLATFORM_LINKS} tone={band} />
-            <FooterLinks title="Legal" links={LEGAL_LINKS} tone={band} />
-          </Box>
-
-          <Box sx={{ borderTop: `1px solid ${band.border}`, pt: 4 }}>
-            <Typography
-              sx={{
-                color: band.muted,
-                fontSize: "0.85rem",
-                lineHeight: 1.7,
-                maxWidth: 900,
-                mb: 2,
-              }}
-            >
-              Disclaimer: Predictions and analytics on WealthNova are for
-              educational and informational purposes only and should not be
-              considered as investment advice. Always conduct your own research
-              and consult with a qualified financial advisor before making
-              investment decisions.
-            </Typography>
-            <Typography sx={{ color: band.muted, fontSize: "0.85rem" }}>
-              © {new Date().getFullYear()} WealthNova. All rights reserved.
-              Built with ❤️ for Indian investors.
-            </Typography>
-          </Box>
+          </Reveal>
         </Container>
       </Box>
 
