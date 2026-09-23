@@ -46,10 +46,22 @@ function Home() {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const menuItems = [
-    { text: "Dashboard", path: "/home/dashboard", icon: <SpaceDashboardRounded /> },
+    {
+      text: "Dashboard",
+      path: "/home/dashboard",
+      icon: <SpaceDashboardRounded />,
+    },
     { text: "Watchlist", path: "/home/watchlist", icon: <DvrRounded /> },
-    { text: "Portfolio", path: "/home/portfolio", icon: <CurrencyExchangeRounded /> },
-    { text: "Calculators", path: "/home/calculator", icon: <CalculateRounded /> },
+    {
+      text: "Portfolio",
+      path: "/home/portfolio",
+      icon: <CurrencyExchangeRounded />,
+    },
+    {
+      text: "Calculators",
+      path: "/home/calculator",
+      icon: <CalculateRounded />,
+    },
     { text: "Profile", path: "/home/profile", icon: <AccountBoxRounded /> },
   ];
 
@@ -121,7 +133,8 @@ function Home() {
                   width: 34,
                   height: 34,
                   borderRadius: "9px",
-                  background: "linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)",
+                  background:
+                    "linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -184,7 +197,9 @@ function Home() {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title={`Switch to ${mode === "dark" ? "Light" : "Dark"} Mode`}>
+            <Tooltip
+              title={`Switch to ${mode === "dark" ? "Light" : "Dark"} Mode`}
+            >
               <IconButton
                 onClick={toggleColorMode}
                 size="small"
@@ -197,7 +212,10 @@ function Home() {
                 }}
               >
                 {mode === "dark" ? (
-                  <LightModeRounded fontSize="small" sx={{ color: "#fbbf24" }} />
+                  <LightModeRounded
+                    fontSize="small"
+                    sx={{ color: "#fbbf24" }}
+                  />
                 ) : (
                   <DarkModeRounded fontSize="small" sx={{ color: "#6366f1" }} />
                 )}
@@ -246,7 +264,10 @@ function Home() {
                 }}
                 sx={{ py: 1.2, gap: 1.5 }}
               >
-                <AccountBoxRounded fontSize="small" sx={{ color: "primary.main" }} />
+                <AccountBoxRounded
+                  fontSize="small"
+                  sx={{ color: "primary.main" }}
+                />
                 <Typography variant="body2" fontWeight={600}>
                   My Profile
                 </Typography>
@@ -254,7 +275,10 @@ function Home() {
 
               <Divider sx={{ my: 0.8 }} />
 
-              <MenuItem onClick={handleLogout} sx={{ py: 1.2, gap: 1.5, color: "error.main" }}>
+              <MenuItem
+                onClick={handleLogout}
+                sx={{ py: 1.2, gap: 1.5, color: "error.main" }}
+              >
                 <LogoutRounded fontSize="small" />
                 <Typography variant="body2" fontWeight={600}>
                   Logout
@@ -319,7 +343,8 @@ function Home() {
               {menuItems.map((item) => {
                 const isActive =
                   location.pathname === item.path ||
-                  (item.path === "/home/dashboard" && location.pathname === "/home");
+                  (item.path === "/home/dashboard" &&
+                    location.pathname === "/home");
 
                 return (
                   <ListItem key={item.text} disablePadding>
@@ -410,16 +435,17 @@ function Home() {
         sx={{
           flexGrow: 1,
           bgcolor: "background.default",
-          p: { xs: 2, sm: 3.5 },
+          p: 1, // <-- Yahan padding poori 0 kar di hai
           minHeight: "100vh",
           overflowX: "hidden",
         }}
       >
-        <Toolbar />
+        <Toolbar />{" "}
+        {/* Yeh sirf upar wale navbar (AppBar) ke barabar space chhodne ke liye hai */}
         <Box
           sx={{
             color: "text.primary",
-            minHeight: "calc(100vh - 120px)",
+            minHeight: "calc(100vh - 64px)", // Niche ka extra space bhi adjust kar diya hai
           }}
         >
           <Outlet />
