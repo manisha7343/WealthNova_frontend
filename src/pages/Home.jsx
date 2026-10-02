@@ -8,9 +8,6 @@ import CurrencyExchangeRounded from "@mui/icons-material/CurrencyExchangeRounded
 import CalculateRounded from "@mui/icons-material/CalculateRounded";
 import LogoutRounded from "@mui/icons-material/LogoutRounded";
 import TrendingUp from "@mui/icons-material/TrendingUp";
-import DarkModeRounded from "@mui/icons-material/DarkModeRounded";
-import LightModeRounded from "@mui/icons-material/LightModeRounded";
-import NotificationsNoneRounded from "@mui/icons-material/NotificationsNoneRounded";
 import {
   Box,
   Drawer,
@@ -30,10 +27,25 @@ import {
   CssBaseline,
   Tooltip,
   Chip,
+  Button,
 } from "@mui/material";
 import { useColorMode } from "../context/ThemeContext";
 
 const DRAWER_WIDTH = 250;
+
+// Market indices data for ticker
+const MARKET_INDICES = [
+  { name: "NIFTY 50", value: "22,145.00", change: 1.2 },
+  { name: "SENSEX", value: "73,850.00", change: 1.1 },
+  { name: "BANK NIFTY", value: "46,780.00", change: -0.5 },
+  { name: "RELIANCE", value: "2,950.00", change: 1.5 },
+  { name: "HDFC BANK", value: "1,450.00", change: -0.8 },
+  { name: "TCS", value: "4,100.00", change: 0.9 },
+  { name: "INFOSYS", value: "1,650.00", change: 1.1 },
+  { name: "ICICI BANK", value: "1,080.00", change: 2.1 },
+  { name: "SBI", value: "750.00", change: 0.4 },
+  { name: "NIFTY IT", value: "37,200.00", change: 2.4 },
+];
 
 function Home() {
   const navigate = useNavigate();
@@ -131,12 +143,10 @@ function Home() {
                   width: 34,
                   height: 34,
                   borderRadius: "9px",
-                  background:
-                    "linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)",
+                  background: "#3B82F6",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  boxShadow: "0 0 15px rgba(56, 189, 248, 0.4)",
                 }}
               >
                 <TrendingUp sx={{ color: "#ffffff", fontSize: 20 }} />
@@ -148,12 +158,7 @@ function Home() {
                   fontWeight: 800,
                   letterSpacing: "0.5px",
                   fontSize: "1.2rem",
-                  background: (theme) =>
-                    theme.palette.mode === "dark"
-                      ? "linear-gradient(135deg, #ffffff 0%, #38bdf8 100%)"
-                      : "linear-gradient(135deg, #0f172a 0%, #0284c7 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
+                  color: "#ffffff",
                 }}
               >
                 WealthNova
@@ -178,65 +183,25 @@ function Home() {
             />
           </Box>
 
-          {/* Right: Notification, Theme Toggle, Profile */}
+          {/* Right: Logout, Profile */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Tooltip title="Market Alerts">
-              <IconButton
-                size="small"
-                color="inherit"
-                sx={{
-                  borderRadius: "10px",
-                  border: "1px solid",
-                  borderColor: "divider",
-                  p: 0.9,
-                }}
-              >
-                <NotificationsNoneRounded fontSize="small" />
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip
-              title={`Switch to ${mode === "dark" ? "Light" : "Dark"} Mode`}
+            <Button
+              size="small"
+              onClick={handleLogout}
+              sx={{
+                color: "#ef4444",
+                border: "1px solid rgba(239, 68, 68, 0.3)",
+                bgcolor: "rgba(239, 68, 68, 0.1)",
+                textTransform: "none",
+                borderRadius: "8px",
+                fontSize: "0.76rem",
+                py: 0.5,
+                px: 1.2,
+                "&:hover": { bgcolor: "rgba(239, 68, 68, 0.2)", borderColor: "rgba(239, 68, 68, 0.5)" },
+              }}
             >
-              <IconButton
-                onClick={toggleColorMode}
-                size="small"
-                color="inherit"
-                sx={{
-                  borderRadius: "10px",
-                  border: "1px solid",
-                  borderColor: "divider",
-                  p: 0.9,
-                }}
-              >
-                {mode === "dark" ? (
-                  <LightModeRounded
-                    fontSize="small"
-                    sx={{ color: "#fbbf24" }}
-                  />
-                ) : (
-                  <DarkModeRounded fontSize="small" sx={{ color: "#6366f1" }} />
-                )}
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip title="Account menu">
-              <IconButton onClick={handleMenuOpen} sx={{ p: 0.5 }}>
-                <Avatar
-                  sx={{
-                    bgcolor: "primary.main",
-                    color: "#ffffff",
-                    width: 36,
-                    height: 36,
-                    fontWeight: 700,
-                    fontSize: "0.95rem",
-                    border: "2px solid rgba(56, 189, 248, 0.4)",
-                  }}
-                >
-                  W
-                </Avatar>
-              </IconButton>
-            </Tooltip>
+              Logout
+            </Button>
 
             <Menu
               anchorEl={anchorEl}
@@ -270,22 +235,93 @@ function Home() {
                   My Profile
                 </Typography>
               </MenuItem>
-
-              <Divider sx={{ my: 0.8 }} />
-
-              <MenuItem
-                onClick={handleLogout}
-                sx={{ py: 1.2, gap: 1.5, color: "error.main" }}
-              >
-                <LogoutRounded fontSize="small" />
-                <Typography variant="body2" fontWeight={600}>
-                  Logout
-                </Typography>
-              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
       </AppBar>
+
+      {/* --- MARKET TICKER MARQUEE --- */}
+      <Box
+        sx={{
+          position: "fixed",
+          top: 64,
+          left: 0,
+          right: 0,
+          height: 28,
+          overflow: "hidden",
+          bgcolor: "#000000",
+          borderBottom: "1px solid",
+          borderColor: "divider",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            height: "100%",
+            width: "max-content",
+            animation: "marquee 45s linear infinite",
+            "@keyframes marquee": {
+              "0%": { transform: "translateX(0%)" },
+              "100%": { transform: "translateX(-50%)" },
+            },
+            "&:hover": { animationPlayState: "paused" },
+          }}
+        >
+          {[...MARKET_INDICES, ...MARKET_INDICES].map((m, i) => {
+            const isPositive = m.change >= 0;
+            return (
+              <Box
+                key={`${m.name}-${i}`}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  pr: 4,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: "0.75rem",
+                    color: "text.primary",
+                  }}
+                >
+                  {m.name}
+                </Typography>
+                <Typography
+                  sx={{
+                    color: "text.secondary",
+                    fontSize: "0.75rem",
+                  }}
+                >
+                  {m.value}
+                </Typography>
+                <Box
+                  sx={{
+                    px: 0.8,
+                    py: 0.1,
+                    borderRadius: "3px",
+                    bgcolor: isPositive
+                      ? "rgba(16, 185, 129, 0.15)"
+                      : "rgba(239, 68, 68, 0.15)",
+                    color: isPositive ? "#10b981" : "#ef4444",
+                    fontWeight: 700,
+                    fontSize: "0.68rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.2,
+                  }}
+                >
+                  {isPositive ? "+" : ""}{m.change}%
+                </Box>
+              </Box>
+            );
+          })}
+        </Box>
+      </Box>
 
       {/* --- COLLAPSIBLE SIDEBAR DRAWER --- */}
       <Drawer
@@ -317,6 +353,7 @@ function Home() {
             flexDirection: "column",
             height: "100%",
             p: 2,
+            marginTop:2,
             justifyContent: "space-between",
           }}
         >
@@ -395,35 +432,7 @@ function Home() {
             </List>
           </Box>
 
-          {/* Bottom Logout Item */}
-          <Box>
-            <Divider sx={{ mb: 1.5 }} />
-            <ListItem disablePadding>
-              <ListItemButton
-                onClick={handleLogout}
-                sx={{
-                  borderRadius: "10px",
-                  py: 1.2,
-                  px: 2,
-                  color: "error.main",
-                  "&:hover": {
-                    bgcolor: "rgba(244, 63, 94, 0.1)",
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 38, color: "error.main" }}>
-                  <LogoutRounded fontSize="small" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Logout"
-                  primaryTypographyProps={{
-                    fontSize: "0.9rem",
-                    fontWeight: 600,
-                  }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Box>
+
         </Box>
       </Drawer>
 
@@ -433,9 +442,10 @@ function Home() {
         sx={{
           flexGrow: 1,
           bgcolor: "background.default",
-          p: 1, // <-- Yahan padding poori 0 kar di hai
+          p: 3, // Increased padding for better spacing
           minHeight: "100vh",
           overflowX: "hidden",
+          mt: "28px", // Space for ticker
         }}
       >
         <Toolbar />{" "}
@@ -443,7 +453,7 @@ function Home() {
         <Box
           sx={{
             color: "text.primary",
-            minHeight: "calc(100vh - 64px)", // Niche ka extra space bhi adjust kar diya hai
+            minHeight: "calc(100vh - 92px)", // Adjusted for ticker height (64px + 28px)
           }}
         >
           <Outlet />

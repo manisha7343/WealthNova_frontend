@@ -19,7 +19,6 @@ import VisibilityRounded from "@mui/icons-material/VisibilityRounded";
 import VisibilityOffRounded from "@mui/icons-material/VisibilityOffRounded";
 import TrendingUpRounded from "@mui/icons-material/TrendingUpRounded";
 import ErrorRounded from "@mui/icons-material/ErrorRounded";
-// import CheckCircleRounded from "@mui/icons-material/CheckCircleRounded";
 import { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -216,7 +215,7 @@ const Login = () => {
               animation: "cardEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            {/* Exact Landing Page Matched Logo */}
+            {/* Logo - same as landing page (blue box, white arrow, no shadow) */}
             <Box
               sx={{
                 display: "inline-flex",
@@ -232,15 +231,14 @@ const Login = () => {
                 sx={{
                   width: 42,
                   height: 42,
-                  borderRadius: 2,
-                  bgcolor: "#00b0ff",
+                  borderRadius: "10px",
+                  bgcolor: "#3B82F6",
                   display: "grid",
                   placeItems: "center",
-                  boxShadow: "0 4px 12px rgba(0, 176, 255, 0.35)",
                   flexShrink: 0,
                 }}
               >
-                <TrendingUpRounded sx={{ color: "#041125", fontSize: 26 }} />
+                <TrendingUpRounded sx={{ color: "#ffffff", fontSize: 26 }} />
               </Box>
               <Typography
                 component="span"
@@ -288,7 +286,7 @@ const Login = () => {
               <TextField
                 margin="normal"
                 required
-                fullWidth 
+                fullWidth
                 label="Username or Email Address"
                 name="login"
                 autoComplete="username"
@@ -339,6 +337,24 @@ const Login = () => {
                 sx={inputFieldStyles}
               />
 
+              {/* Forgot password - display only, does nothing for now */}
+              {/* <Box sx={{ textAlign: "right", mt: 0.5 }}>
+                <Link
+                  component="button"
+                  type="button"
+                  underline="hover"
+                  onClick={(e) => e.preventDefault()}
+                  sx={{
+                    fontSize: "0.85rem",
+                    fontWeight: 600,
+                    color: "#3B82F6",
+                    "&:hover": { color: "#60a5fa" },
+                  }}
+                >
+                  Forgot password?
+                </Link>
+              </Box> */}
+
               {/* Login Button */}
               <Button
                 type="submit"
@@ -346,7 +362,7 @@ const Login = () => {
                 variant="contained"
                 disabled={loading}
                 sx={{
-                  mt: 3,
+                  mt: 2.5,
                   mb: 2,
                   py: 1.4,
                   borderRadius: "10px",
@@ -380,7 +396,7 @@ const Login = () => {
                 )}
               </Button>
 
-              {/* ERROR ALERT DISPLAY (Prominent, High-Contrast, Animated) */}
+              {/* ERROR ALERT DISPLAY */}
               <Collapse in={Boolean(error)}>
                 <Alert
                   severity="error"

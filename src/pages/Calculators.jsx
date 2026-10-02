@@ -11,19 +11,21 @@ import {
 } from "@mui/material";
 
 function SipCalculator() {
-  const [monthlyInvestment, setMonthlyInvestment] = useState(10000);
-  const [expectedRate, setExpectedRate] = useState(12);
-  const [years, setYears] = useState(10);
+  const [monthlyInvestment, setMonthlyInvestment] = useState("");
+  const [expectedRate, setExpectedRate] = useState("");
+  const [years, setYears] = useState("");
 
-  const months = years * 12;
-  const i = expectedRate / 12 / 100;
-  const investedAmount = monthlyInvestment * months;
+  const months = years ? years * 12 : 0;
+  const i = expectedRate ? expectedRate / 12 / 100 : 0;
+  const investedAmount = monthlyInvestment ? monthlyInvestment * months : 0;
   const totalValue =
-    monthlyInvestment * (((Math.pow(1 + i, months) - 1) / i) * (1 + i));
+    monthlyInvestment && expectedRate && years
+      ? monthlyInvestment * (((Math.pow(1 + i, months) - 1) / i) * (1 + i))
+      : 0;
   const estReturns = Math.max(0, totalValue - investedAmount);
 
   return (
-    <Paper elevation={0} variant="outlined" sx={{ p: 3.5, mt: 3, borderRadius: "16px" }}>
+    <Paper elevation={0} variant="outlined" sx={{ p: 3.5, mt: 6, borderRadius: "16px" }}>
       <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>
         SIP (Systematic Investment Plan) Calculator
       </Typography>
@@ -38,7 +40,8 @@ function SipCalculator() {
             label="Monthly Investment (₹)"
             type="number"
             value={monthlyInvestment}
-            onChange={(e) => setMonthlyInvestment(Number(e.target.value) || 0)}
+            onChange={(e) => setMonthlyInvestment(e.target.value)}
+            inputProps={{ min: 0 }}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -47,7 +50,8 @@ function SipCalculator() {
             label="Expected Return Rate (% p.a)"
             type="number"
             value={expectedRate}
-            onChange={(e) => setExpectedRate(Number(e.target.value) || 0)}
+            onChange={(e) => setExpectedRate(e.target.value)}
+            inputProps={{ min: 0 }}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -56,7 +60,8 @@ function SipCalculator() {
             label="Time Horizon (Years)"
             type="number"
             value={years}
-            onChange={(e) => setYears(Number(e.target.value) || 0)}
+            onChange={(e) => setYears(e.target.value)}
+            inputProps={{ min: 0 }}
           />
         </Grid>
       </Grid>
@@ -70,7 +75,7 @@ function SipCalculator() {
               Invested Amount
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 800 }}>
-              ₹{investedAmount.toLocaleString("en-IN")}
+              ₹{investedAmount ? investedAmount.toLocaleString("en-IN") : "0"}
             </Typography>
           </Box>
         </Grid>
@@ -107,15 +112,17 @@ function SipCalculator() {
 }
 
 function LumpsumCalculator() {
-  const [totalInvestment, setTotalInvestment] = useState(100000);
-  const [expectedRate, setExpectedRate] = useState(12);
-  const [years, setYears] = useState(5);
+  const [totalInvestment, setTotalInvestment] = useState("");
+  const [expectedRate, setExpectedRate] = useState("");
+  const [years, setYears] = useState("");
 
-  const totalValue = totalInvestment * Math.pow(1 + expectedRate / 100, years);
+  const totalValue = totalInvestment && expectedRate && years
+    ? totalInvestment * Math.pow(1 + expectedRate / 100, years)
+    : 0;
   const estReturns = Math.max(0, totalValue - totalInvestment);
 
   return (
-    <Paper elevation={0} variant="outlined" sx={{ p: 3.5, mt: 3, borderRadius: "16px" }}>
+    <Paper elevation={0} variant="outlined" sx={{ p: 3.5, mt: 6, borderRadius: "16px" }}>
       <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>
         Lumpsum Investment Calculator
       </Typography>
@@ -130,7 +137,8 @@ function LumpsumCalculator() {
             label="Total Investment Amount (₹)"
             type="number"
             value={totalInvestment}
-            onChange={(e) => setTotalInvestment(Number(e.target.value) || 0)}
+            onChange={(e) => setTotalInvestment(e.target.value)}
+            inputProps={{ min: 0 }}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -139,7 +147,8 @@ function LumpsumCalculator() {
             label="Expected Return Rate (% p.a)"
             type="number"
             value={expectedRate}
-            onChange={(e) => setExpectedRate(Number(e.target.value) || 0)}
+            onChange={(e) => setExpectedRate(e.target.value)}
+            inputProps={{ min: 0 }}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -148,7 +157,8 @@ function LumpsumCalculator() {
             label="Time Horizon (Years)"
             type="number"
             value={years}
-            onChange={(e) => setYears(Number(e.target.value) || 0)}
+            onChange={(e) => setYears(e.target.value)}
+            inputProps={{ min: 0 }}
           />
         </Grid>
       </Grid>
@@ -162,7 +172,7 @@ function LumpsumCalculator() {
               Invested Amount
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 800 }}>
-              ₹{totalInvestment.toLocaleString("en-IN")}
+              ₹{totalInvestment ? Number(totalInvestment).toLocaleString("en-IN") : "0"}
             </Typography>
           </Box>
         </Grid>
@@ -198,20 +208,138 @@ function LumpsumCalculator() {
   );
 }
 
-function EmiCalculator() {
-  const [loanAmount, setLoanAmount] = useState(1000000);
-  const [interestRate, setInterestRate] = useState(8.5);
-  const [tenureYears, setTenureYears] = useState(10);
+function SwpCalculator() {
+  const [totalInvestment, setTotalInvestment] = useState("");
+  const [expectedRate, setExpectedRate] = useState("");
+  const [withdrawalAmount, setWithdrawalAmount] = useState("");
+  const [years, setYears] = useState("");
 
-  const months = tenureYears * 12;
-  const r = interestRate / 12 / 100;
+  const months = years ? years * 12 : 0;
+  const r = expectedRate ? expectedRate / 12 / 100 : 0;
+
+  // SWP Formula: FV = P * (1 + r)^n - W * [((1 + r)^n - 1) / r]
+  const finalValue =
+    totalInvestment && expectedRate && withdrawalAmount && years
+      ? totalInvestment * Math.pow(1 + r, months) -
+        withdrawalAmount * ((Math.pow(1 + r, months) - 1) / r)
+      : 0;
+
+  const totalWithdrawal = withdrawalAmount ? withdrawalAmount * months : 0;
+  const remainingValue = Math.max(0, finalValue);
+
+  return (
+    <Paper elevation={0} variant="outlined" sx={{ p: 3.5, mt: 6, borderRadius: "16px" }}>
+      <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>
+        SWP (Systematic Withdrawal Plan) Calculator
+      </Typography>
+      <Typography variant="body2" sx={{ color: "text.secondary", mb: 3 }}>
+        Calculate regular income from your investments while the balance continues to grow.
+      </Typography>
+
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            fullWidth
+            label="Total Investment (₹)"
+            type="number"
+            value={totalInvestment}
+            onChange={(e) => setTotalInvestment(e.target.value)}
+            inputProps={{ min: 0 }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            fullWidth
+            label="Expected Return Rate (% p.a)"
+            type="number"
+            value={expectedRate}
+            onChange={(e) => setExpectedRate(e.target.value)}
+            inputProps={{ min: 0 }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            fullWidth
+            label="Monthly Withdrawal (₹)"
+            type="number"
+            value={withdrawalAmount}
+            onChange={(e) => setWithdrawalAmount(e.target.value)}
+            inputProps={{ min: 0 }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            fullWidth
+            label="Time Horizon (Years)"
+            type="number"
+            value={years}
+            onChange={(e) => setYears(e.target.value)}
+            inputProps={{ min: 0 }}
+          />
+        </Grid>
+      </Grid>
+
+      <Divider sx={{ my: 3 }} />
+
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={4}>
+          <Box sx={{ p: 2, borderRadius: "12px", bgcolor: "action.hover" }}>
+            <Typography variant="caption" sx={{ color: "text.secondary", fontWeight: 600 }}>
+              Total Investment
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 800 }}>
+              ₹{totalInvestment ? Number(totalInvestment).toLocaleString("en-IN") : "0"}
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Box sx={{ p: 2, borderRadius: "12px", bgcolor: "action.hover" }}>
+            <Typography variant="caption" sx={{ color: "text.secondary", fontWeight: 600 }}>
+              Total Withdrawal
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 800, color: "success.main" }}>
+              ₹{Math.round(totalWithdrawal).toLocaleString("en-IN")}
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Box
+            sx={{
+              p: 2,
+              borderRadius: "12px",
+              background: "linear-gradient(135deg, #0284c7 0%, #2563eb 100%)",
+              color: "#ffffff",
+            }}
+          >
+            <Typography variant="caption" sx={{ opacity: 0.9, fontWeight: 700 }}>
+              Remaining Value
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 800 }}>
+              ₹{Math.round(remainingValue).toLocaleString("en-IN")}
+            </Typography>
+          </Box>
+        </Grid>
+      </Grid>
+    </Paper>
+  );
+}
+
+function EmiCalculator() {
+  const [loanAmount, setLoanAmount] = useState("");
+  const [interestRate, setInterestRate] = useState("");
+  const [tenureYears, setTenureYears] = useState("");
+
+  const months = tenureYears ? tenureYears * 12 : 0;
+  const r = interestRate ? interestRate / 12 / 100 : 0;
   const emi =
-    (loanAmount * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+    loanAmount && interestRate && tenureYears
+      ? (loanAmount * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1)
+      : 0;
   const totalPayment = emi * months;
   const totalInterest = Math.max(0, totalPayment - loanAmount);
 
   return (
-    <Paper elevation={0} variant="outlined" sx={{ p: 3.5, mt: 3, borderRadius: "16px" }}>
+    <Paper elevation={0} variant="outlined" sx={{ p: 3.5, mt: 6, borderRadius: "16px" }}>
       <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>
         Loan EMI Calculator
       </Typography>
@@ -226,7 +354,8 @@ function EmiCalculator() {
             label="Loan Amount (₹)"
             type="number"
             value={loanAmount}
-            onChange={(e) => setLoanAmount(Number(e.target.value) || 0)}
+            onChange={(e) => setLoanAmount(e.target.value)}
+            inputProps={{ min: 0 }}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -235,7 +364,8 @@ function EmiCalculator() {
             label="Annual Interest Rate (%)"
             type="number"
             value={interestRate}
-            onChange={(e) => setInterestRate(Number(e.target.value) || 0)}
+            onChange={(e) => setInterestRate(e.target.value)}
+            inputProps={{ min: 0 }}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -244,7 +374,8 @@ function EmiCalculator() {
             label="Loan Tenure (Years)"
             type="number"
             value={tenureYears}
-            onChange={(e) => setTenureYears(Number(e.target.value) || 0)}
+            onChange={(e) => setTenureYears(e.target.value)}
+            inputProps={{ min: 0 }}
           />
         </Grid>
       </Grid>
@@ -275,7 +406,7 @@ function EmiCalculator() {
               Principal Loan
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 800 }}>
-              ₹{loanAmount.toLocaleString("en-IN")}
+              ₹{loanAmount ? Number(loanAmount).toLocaleString("en-IN") : "0"}
             </Typography>
           </Box>
         </Grid>
@@ -299,7 +430,7 @@ export default function Calculators() {
 
   return (
     <Box sx={{ width: "100%", pb: 4 }}>
-      <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.5px" }}>
+      <Typography variant="h4" sx={{ fontWeight: 400, letterSpacing: "-0.5px", fontSize: "1.75rem" }}>
         Financial Wealth Calculators
       </Typography>
       <Typography variant="body2" sx={{ color: "text.secondary", mt: 0.5, mb: 3 }}>
@@ -323,13 +454,15 @@ export default function Calculators() {
         >
           <Tab label="SIP Calculator" />
           <Tab label="Lumpsum Calculator" />
+          <Tab label="SWP Calculator" />
           <Tab label="EMI Calculator" />
         </Tabs>
       </Box>
 
       {tabIndex === 0 && <SipCalculator />}
       {tabIndex === 1 && <LumpsumCalculator />}
-      {tabIndex === 2 && <EmiCalculator />}
+      {tabIndex === 2 && <SwpCalculator />}
+      {tabIndex === 3 && <EmiCalculator />}
     </Box>
   );
 }

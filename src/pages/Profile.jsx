@@ -106,7 +106,7 @@ const CardHeader = ({ icon, title, subtitle, action }) => (
 const InfoTile = ({ icon, label, children }) => (
   <Box
     sx={{
-      p: 1.5, minHeight: 92, borderRadius: 2.5, bgcolor: TILE_BG,
+      p: 1.5, minHeight: 92, borderRadius: "10px", bgcolor: TILE_BG,
       border: `1px solid ${TILE_BORDER}`, minWidth: 0,
     }}
   >
@@ -327,9 +327,9 @@ function Profile() {
   if (loading) {
     return (
       <Box sx={{ width: "100%", p: { xs: 1, md: 1.5 } }}>
-        <Skeleton variant="rounded" height={200} sx={{ mb: 2, borderRadius: 3 }} />
-        <Skeleton variant="rounded" height={190} sx={{ mb: 2, borderRadius: 3 }} />
-        <Skeleton variant="rounded" height={190} sx={{ borderRadius: 3 }} />
+        <Skeleton variant="rounded" height={200} sx={{ mb: 2, borderRadius: "12px" }} />
+        <Skeleton variant="rounded" height={190} sx={{ mb: 2, borderRadius: "12px" }} />
+        <Skeleton variant="rounded" height={190} sx={{ borderRadius: "12px" }} />
       </Box>
     );
   }
@@ -381,10 +381,10 @@ function Profile() {
       {/* -------- Hero banner: avatar + identity + contact row -------- */}
       <Box
         sx={{
-          borderRadius: 4,
+          borderRadius: "14px",
           mb: 2,
           p: { xs: 2, md: 3 },
-          background: `linear-gradient(120deg, ${NAVY_DARK} 0%, ${NAVY} 55%, #04347d 100%)`,
+          background: `linear-gradient(120deg, ${NAVY_DARK} 0%, ${NAVY} 55%, #113d7e 100%)`,
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 2, md: 3 }, flexWrap: { xs: "wrap", sm: "nowrap" } }}>
@@ -436,7 +436,7 @@ function Profile() {
                     bgcolor: GOLD,
                     color: NAVY_DARK,
                     boxShadow: 2,
-                    "&:hover": { bgcolor: "#eab308" },
+                    "&:hover": { bgcolor: "#0850ea" },
                   }}
                 >
                   <PhotoCamera fontSize="small" />
@@ -511,7 +511,7 @@ function Profile() {
       {/* -------- Personal information -------- */}
       <Paper
         elevation={0}
-        sx={{ p: { xs: 2, md: 2.5 }, mb: 2, borderRadius: 3, border: `1px solid ${CARD_BORDER}`, bgcolor: CARD_BG }}
+        sx={{ p: { xs: 2, md: 2.5 }, mb: 2, borderRadius: "12px", border: `1px solid ${CARD_BORDER}`, bgcolor: CARD_BG }}
       >
         <CardHeader
           icon={<Person />}
@@ -524,7 +524,7 @@ function Profile() {
                 size="small"
                 variant="outlined"
                 onClick={() => setIsEditing(true)}
-                sx={{ borderColor: NAVY, color: NAVY, borderRadius: 2 }}
+                sx={{ borderColor: NAVY, color: NAVY, borderRadius: "8px" }}
               >
                 Edit
               </Button>
@@ -610,7 +610,7 @@ function Profile() {
       {/* -------- Security & password -------- */}
       <Paper
         elevation={0}
-        sx={{ p: { xs: 2, md: 2.5 }, mb: 2, borderRadius: 3, border: `1px solid ${CARD_BORDER}`, bgcolor: CARD_BG }}
+        sx={{ p: { xs: 2, md: 2.5 }, mb: 2, borderRadius: "12px", border: `1px solid ${CARD_BORDER}`, bgcolor: CARD_BG }}
       >
         <CardHeader
           icon={<Security />}
@@ -638,7 +638,7 @@ function Profile() {
               variant="contained"
               disabled={changingPassword}
               startIcon={changingPassword ? <CircularProgress size={16} color="inherit" /> : <Lock />}
-              sx={{ bgcolor: NAVY, borderRadius: 2, "&:hover": { bgcolor: "#070c10", color: "white", border: "1px solid white" } }}
+              sx={{ bgcolor: NAVY, borderRadius: "8px", "&:hover": { bgcolor: "#070c10", color: "white", border: "1px solid white" } }}
             >
               Update Password
             </Button>
@@ -650,7 +650,7 @@ function Profile() {
       <Paper
         elevation={0}
         sx={{
-          p: { xs: 2, md: 2.5 }, borderRadius: 3, border: "1px solid",
+          p: { xs: 3, md: 4 }, borderRadius: "12px", border: "1px solid",
           borderColor: "error.light", bgcolor: "#a50a0a46",
           display: "flex", alignItems: { xs: "flex-start", sm: "center" },
           justifyContent: "space-between", flexDirection: { xs: "column", sm: "row" }, gap: 2,
@@ -680,7 +680,7 @@ function Profile() {
           color="error"
           startIcon={<DeleteForever />}
           onClick={() => setOpenDeleteDialog(true)}
-          sx={{ flexShrink: 0, borderRadius: 2 }}
+          sx={{ flexShrink: 0, borderRadius: "8px" }}
         >
           Delete Account
         </Button>

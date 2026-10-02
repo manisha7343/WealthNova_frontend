@@ -334,7 +334,7 @@ export default function Watchlist() {
               </Stack>
 
               <Stack direction="row" spacing={1.5}>
-                <Button
+                {/* <Button
                   variant="outlined"
                   size="small"
                   sx={{
@@ -350,8 +350,8 @@ export default function Watchlist() {
                   }}
                 >
                   📥 Export to Excel
-                </Button>
-                <Button
+                </Button> */}
+                {/* <Button
                   variant="outlined"
                   size="small"
                   sx={{
@@ -367,7 +367,7 @@ export default function Watchlist() {
                   }}
                 >
                   - Unfollow
-                </Button>
+                </Button> */}
               </Stack>
             </Stack>
 
@@ -971,7 +971,7 @@ export default function Watchlist() {
       {/* ========================================================= */}
       {/* FOOTER SECTION */}
       {/* ========================================================= */}
-      <Box
+      {/* <Box
         component="footer"
         sx={{
           mt: 8,
@@ -1007,7 +1007,7 @@ export default function Watchlist() {
             </Typography>
           </Grid>
         </Grid>
-      </Box>
+      </Box> */}
     </Box>
   );
 }

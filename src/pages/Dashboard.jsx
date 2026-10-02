@@ -153,13 +153,13 @@ const CRYPTO_DATA = [
 // ==========================================
 // REUSABLE UI PIECES
 // ==========================================
-const Section = ({ children }) => (
+const Section = ({ children, bgcolor = "transparent" }) => (
   <Box
     sx={{
       border: "1px solid #ffffff",
       borderRadius: "14px",
       p: { xs: 2, md: 3 },
-      bgcolor: "transparent",
+      bgcolor: bgcolor,
       mb: 3,
     }}
   >
@@ -226,19 +226,21 @@ const PctBadge = ({ value, solid = false }) => {
 const StockRow = ({ stock, showVolume = false, solid = false }) => {
   const initial = (stock.name || stock.symbol || "?").charAt(0).toUpperCase();
   return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      justifyContent="space-between"
-      spacing={1.5}
+    <Paper
+      elevation={0}
       sx={{
         height: ROW_H,
         px: 1.5,
+        py: 0.5,
         bgcolor: "#0b0f17",
         border: "1px solid #1f2937",
-        borderRadius: "10px",
+        borderRadius: "8px",
         flexShrink: 0,
-        "&:hover": { borderColor: "#3b82f6", bgcolor: "#111827" },
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        transition: "all 0.2s",
+        "&:hover": { borderColor: "#155ac8", bgcolor: "#111827" },
       }}
     >
       <Stack direction="row" alignItems="center" spacing={1.5} sx={{ minWidth: 0 }}>
@@ -294,7 +296,7 @@ const StockRow = ({ stock, showVolume = false, solid = false }) => {
         </Typography>
         <PctBadge value={stock.percent} solid={solid} />
       </Stack>
-    </Stack>
+    </Paper>
   );
 };
 
@@ -305,7 +307,7 @@ export default function Dashboard() {
   const [marketIndices, setMarketIndices] = useState([]);
   const [ipos, setIpos] = useState(IPO_DATA);
   const [newsList, setNewsList] = useState(FOREIGN_NEWS);
-  const [cryptoList, setCryptoList] = useState(CRYPTO_DATA);
+  // const [cryptoList, setCryptoList] = useState(CRYPTO_DATA);
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -440,7 +442,7 @@ export default function Dashboard() {
   return (
     <Box sx={{ width: "100%", minHeight: "100vh", bgcolor: "#050914", color: "#f3f4f6", p: 0 }}>
       {/* HEADER SECTION */}
-      <Box sx={{ px: { xs: 1.5, md: 2 }, pt: 1.5, pb: 0 }}>
+      <Box sx={{ px: { xs: 1.5, md: 2 }, pt: 1.5, pb: 0}}>
         <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" alignItems="center" spacing={2} sx={{ mb: 2.5 }}>
           <Stack direction="row" alignItems="center" spacing={1.5} sx={{ flexGrow: 1 }}>
             <Typography variant="h5" fontWeight="bold" sx={{ color: "#ffffff", letterSpacing: -0.5 }}>
@@ -796,33 +798,31 @@ export default function Dashboard() {
         </Section>
 
         {/* ROW 4: TOP GAINERS + TOP LOSERS (from DB) */}
-        <Section>
-          <TwoCol>
-            <Box>
-              <PanelTitle icon={<TrendingUpIcon sx={{ color: GREEN, fontSize: "1.2rem" }} />} count={gainers.length}>
-                Stock Gainers
-              </PanelTitle>
-              <Stack spacing={1} sx={{ maxHeight: SIX_COMPACT_H, ...scrollSx }}>
-                {gainers.length === 0 && <EmptyState text="No gainers right now." />}
-                {gainers.map((s) => (
-                  <StockRow key={s.key} stock={s} solid />
-                ))}
-              </Stack>
-            </Box>
+        <TwoCol>
+          <Section>
+            <PanelTitle icon={<TrendingUpIcon sx={{ color: GREEN, fontSize: "1.2rem" }} />} count={gainers.length}>
+              Top Gainers
+            </PanelTitle>
+            <Stack spacing={1} sx={{ maxHeight: SIX_COMPACT_H, ...scrollSx }}>
+              {gainers.length === 0 && <EmptyState text="No gainers right now." />}
+              {gainers.map((s) => (
+                <StockRow key={s.key} stock={s} solid={false} />
+              ))}
+            </Stack>
+          </Section>
 
-            <Box>
-              <PanelTitle icon={<TrendingDownIcon sx={{ color: RED, fontSize: "1.2rem" }} />} count={losers.length}>
-                Stock Losers
-              </PanelTitle>
-              <Stack spacing={1} sx={{ maxHeight: SIX_COMPACT_H, ...scrollSx }}>
-                {losers.length === 0 && <EmptyState text="No losers right now." />}
-                {losers.map((s) => (
-                  <StockRow key={s.key} stock={s} solid />
-                ))}
-              </Stack>
-            </Box>
-          </TwoCol>
-        </Section>
+          <Section>
+            <PanelTitle icon={<TrendingDownIcon sx={{ color: RED, fontSize: "1.2rem" }} />} count={losers.length}>
+              Top Losers
+            </PanelTitle>
+            <Stack spacing={1} sx={{ maxHeight: SIX_COMPACT_H, ...scrollSx }}>
+              {losers.length === 0 && <EmptyState text="No losers right now." />}
+              {losers.map((s) => (
+                <StockRow key={s.key} stock={s} solid={false} />
+              ))}
+            </Stack>
+          </Section>
+        </TwoCol>
       </Box>
     </Box>
   );

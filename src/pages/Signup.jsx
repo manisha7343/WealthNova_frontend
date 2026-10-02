@@ -265,7 +265,7 @@ const Signup = () => {
               animation: "cardEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            {/* Exact Landing Page Matched Logo */}
+            {/* Logo - same as landing page (blue box, white arrow, no shadow) */}
             <Box
               sx={{
                 display: "inline-flex",
@@ -281,15 +281,14 @@ const Signup = () => {
                 sx={{
                   width: 42,
                   height: 42,
-                  borderRadius: 2,
-                  bgcolor: "#00b0ff",
+                  borderRadius: "10px",
+                  bgcolor: "#3B82F6",
                   display: "grid",
                   placeItems: "center",
-                  boxShadow: "0 4px 12px rgba(0, 176, 255, 0.35)",
                   flexShrink: 0,
                 }}
               >
-                <TrendingUpRounded sx={{ color: "#041125", fontSize: 26 }} />
+                <TrendingUpRounded sx={{ color: "#ffffff", fontSize: 26 }} />
               </Box>
               <Typography
                 component="span"
@@ -518,7 +517,7 @@ const Signup = () => {
                 )}
               </Button>
 
-              {/* ERROR ALERT DISPLAY (Prominent, High-Contrast, Animated) */}
+              {/* ERROR ALERT DISPLAY */}
               <Collapse in={Boolean(error)}>
                 <Alert
                   severity="error"
