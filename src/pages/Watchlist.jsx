@@ -307,7 +307,7 @@ export default function Watchlist() {
                     <Typography variant="h5" fontWeight="bold" sx={{ color: "#38bdf8" }}>
                       ₹ {selectedStock.marketData?.currentPrice?.toLocaleString()}
                     </Typography>
-                    <Typography variant="caption" sx={{ color: "#10b981", fontWeight: "bold", fontSize: "0.85rem" }}>
+                    <Typography variant="caption" sx={{  fontWeight: "bold", fontSize: "0.85rem" }}>
                       ▲ 0.80%
                     </Typography>
                   </Stack>

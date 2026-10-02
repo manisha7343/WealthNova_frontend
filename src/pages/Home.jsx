@@ -1,18 +1,16 @@
 import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import {
-  MenuOutlined,
-  SpaceDashboardRounded,
-  AccountBoxRounded,
-  DvrRounded,
-  CurrencyExchangeRounded,
-  CalculateRounded,
-  LogoutRounded,
-  TrendingUp,
-  DarkModeRounded,
-  LightModeRounded,
-  NotificationsNoneRounded,
-} from "@mui/icons-material";
+import MenuOutlined from "@mui/icons-material/MenuOutlined";
+import SpaceDashboardRounded from "@mui/icons-material/SpaceDashboardRounded";
+import AccountBoxRounded from "@mui/icons-material/AccountBoxRounded";
+import DvrRounded from "@mui/icons-material/DvrRounded";
+import CurrencyExchangeRounded from "@mui/icons-material/CurrencyExchangeRounded";
+import CalculateRounded from "@mui/icons-material/CalculateRounded";
+import LogoutRounded from "@mui/icons-material/LogoutRounded";
+import TrendingUp from "@mui/icons-material/TrendingUp";
+import DarkModeRounded from "@mui/icons-material/DarkModeRounded";
+import LightModeRounded from "@mui/icons-material/LightModeRounded";
+import NotificationsNoneRounded from "@mui/icons-material/NotificationsNoneRounded";
 import {
   Box,
   Drawer,

@@ -395,8 +395,9 @@ export const Logo = ({ tone = { fg: WHITE, bg: DARK_BLUE }, size = 40 }) => (
   </Link>
 );
 
-const Ticker = () => {
-  const items = [...MARKET, ...MARKET];
+const Ticker = ({ market = [] }) => {
+  const source = market && market.length > 0 ? market : MARKET;
+  const items = [...source, ...source];
 
   return (
     <Box
@@ -427,11 +428,24 @@ const Ticker = () => {
         }}
       >
         {items.map((m, i) => {
-          const up = m.change >= 0;
+          const changeVal =
+            m.change !== undefined
+              ? m.change
+              : m.percentChange !== undefined
+                ? m.percentChange
+                : 0;
+          const up = Number(changeVal) >= 0;
+          const formattedVal =
+            m.value ||
+            (m.price !== undefined
+              ? typeof m.price === "number"
+                ? `₹${m.price.toLocaleString("en-IN")}`
+                : m.price
+              : "");
           return (
             <Box
               key={`${m.name}-${i}`}
-              aria-hidden={i >= MARKET.length}
+              aria-hidden={i >= source.length}
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -446,14 +460,14 @@ const Ticker = () => {
                 {m.name}
               </Box>
               <Box component="span" sx={{ color: hexToRgba(CREAM, 0.8) }}>
-                {m.value}
+                {formattedVal}
               </Box>
               <Chip
                 size="small"
-                label={`${Math.abs(m.change).toFixed(2)}%`}
+                label={`${up ? "+" : ""}${Math.abs(Number(changeVal)).toFixed(2)}%`}
                 sx={{
-                  bgcolor: up ? hexToRgba(CREAM, 0.2) : hexToRgba(CREAM, 0.2),
-                  color: CREAM,
+                  bgcolor: up ? "rgba(74, 222, 128, 0.2)" : "rgba(248, 113, 113, 0.2)",
+                  color: up ? "#4ade80" : "#f87171",
                   fontWeight: 700,
                   fontSize: "0.75rem",
                   height: 20,
@@ -461,9 +475,9 @@ const Ticker = () => {
                 }}
                 icon={
                   up ? (
-                    <ArrowDropUpIcon fontSize="small" />
+                    <ArrowDropUpIcon fontSize="small" sx={{ color: "#4ade80 !important" }} />
                   ) : (
-                    <ArrowDropDownIcon fontSize="small" />
+                    <ArrowDropDownIcon fontSize="small" sx={{ color: "#f87171 !important" }} />
                   )
                 }
               />
@@ -549,12 +563,55 @@ const LandingPage = () => {
   // STATE TO HOLD CURRENT CHART SYMBOL
   const [chartSymbol, setChartSymbol] = useState("NIFTY 50");
 
+  // DYNAMIC BACKEND STATES
+  const [marketList, setMarketList] = useState([]);
+  const [gainers, setGainers] = useState([]);
+  const [losers, setLosers] = useState([]);
+  const [newsList, setNewsList] = useState([]);
+  const [ipos, setIpos] = useState([]);
+
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Fetch dynamic data from MongoDB Backend
+  useEffect(() => {
+    const fetchLandingData = async () => {
+      try {
+        const [mktRes, glRes, newsRes, ipoRes] = await Promise.allSettled([
+          fetch("http://localhost:3002/api/market").then((r) => r.json()),
+          fetch("http://localhost:3002/api/market/gainers-losers").then((r) => r.json()),
+          fetch("http://localhost:3002/api/news?limit=8").then((r) => r.json()),
+          fetch("http://localhost:3002/api/ipo").then((r) => r.json()),
+        ]);
+
+        if (mktRes.status === "fulfilled" && mktRes.value.success && Array.isArray(mktRes.value.data) && mktRes.value.data.length > 0) {
+          setMarketList(mktRes.value.data);
+        }
+        if (glRes.status === "fulfilled" && glRes.value.success && glRes.value.data) {
+          if (Array.isArray(glRes.value.data.gainers) && glRes.value.data.gainers.length > 0) {
+            setGainers(glRes.value.data.gainers);
+          }
+          if (Array.isArray(glRes.value.data.losers) && glRes.value.data.losers.length > 0) {
+            setLosers(glRes.value.data.losers);
+          }
+        }
+        if (newsRes.status === "fulfilled" && newsRes.value.success && Array.isArray(newsRes.value.data) && newsRes.value.data.length > 0) {
+          setNewsList(newsRes.value.data);
+        }
+        if (ipoRes.status === "fulfilled" && ipoRes.value.success && Array.isArray(ipoRes.value.data) && ipoRes.value.data.length > 0) {
+          setIpos(ipoRes.value.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch landing data:", err);
+      }
+    };
+
+    fetchLandingData();
   }, []);
 
   const { page, band, card } = useMemo(() => getTokens(), []);
@@ -622,9 +679,9 @@ const LandingPage = () => {
           animation: "fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both",
         },
         "& .MuiTypography-root, & .MuiButton-root, & .MuiInputBase-root, & .MuiChip-root":
-          {
-            fontFamily: FONT,
-          },
+        {
+          fontFamily: FONT,
+        },
       }}
     >
       {/* ------------------------------ HEADER ------------------------------ */}
@@ -726,7 +783,7 @@ const LandingPage = () => {
           </Box>
         </Container>
 
-        <Ticker />
+        <Ticker market={marketList} />
       </Box>
 
       <Box aria-hidden sx={{ height: CHROME_H }} />
@@ -1088,67 +1145,79 @@ const LandingPage = () => {
                         </Typography>
                       </Box>
 
-                      {TOP_GAINERS.map((stock, index) => (
-                        <Box
-                          key={stock.name}
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            py: 1.5,
-                            borderBottom:
-                              index < TOP_GAINERS.length - 1
-                                ? `1px solid rgba(255,255,255,0.1)`
-                                : "none",
-                            "&:hover": { bgcolor: "rgba(255,255,255,0.05)" },
-                            px: 1,
-                            borderRadius: 1,
-                            transition: "bgcolor 0.2s",
-                          }}
-                        >
-                          <Box>
-                            <Typography
-                              sx={{
-                                fontWeight: 700,
-                                fontSize: "0.95rem",
-                                color: CREAM,
-                              }}
-                            >
-                              {stock.name}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                color: "rgba(255,255,255,0.6)",
-                                fontSize: "0.75rem",
-                                mt: 0.2,
-                              }}
-                            >
-                              {stock.desc}
-                            </Typography>
+                      {(gainers.length > 0 ? gainers : TOP_GAINERS).map((stock, index) => {
+                        const formattedPrice =
+                          typeof stock.price === "number"
+                            ? `₹${stock.price.toLocaleString("en-IN")}`
+                            : stock.price;
+                        const formattedChange =
+                          typeof stock.percentChange === "number"
+                            ? `+${stock.percentChange}%`
+                            : stock.change;
+                        const listLen = gainers.length > 0 ? gainers.length : TOP_GAINERS.length;
+
+                        return (
+                          <Box
+                            key={stock.symbol || stock.name || index}
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              py: 1.5,
+                              borderBottom:
+                                index < listLen - 1
+                                  ? `1px solid rgba(255,255,255,0.1)`
+                                  : "none",
+                              "&:hover": { bgcolor: "rgba(255,255,255,0.05)" },
+                              px: 1,
+                              borderRadius: 1,
+                              transition: "bgcolor 0.2s",
+                            }}
+                          >
+                            <Box>
+                              <Typography
+                                sx={{
+                                  fontWeight: 700,
+                                  fontSize: "0.95rem",
+                                  color: CREAM,
+                                }}
+                              >
+                                {stock.name}
+                              </Typography>
+                              <Typography
+                                sx={{
+                                  color: "rgba(255,255,255,0.6)",
+                                  fontSize: "0.75rem",
+                                  mt: 0.2,
+                                }}
+                              >
+                                {stock.desc || stock.symbol}
+                              </Typography>
+                            </Box>
+                            <Box sx={{ textAlign: "right" }}>
+                              <Typography
+                                sx={{
+                                  fontWeight: 800,
+                                  fontSize: "0.95rem",
+                                  color: CREAM,
+                                }}
+                              >
+                                {formattedPrice}
+                              </Typography>
+                              <Typography
+                                sx={{
+                                  color: "#4ade80",
+                                  fontWeight: 800,
+                                  fontSize: "0.8rem",
+                                  mt: 0.2,
+                                }}
+                              >
+                                {formattedChange}
+                              </Typography>
+                            </Box>
                           </Box>
-                          <Box sx={{ textAlign: "right" }}>
-                            <Typography
-                              sx={{
-                                fontWeight: 800,
-                                fontSize: "0.95rem",
-                                color: CREAM,
-                              }}
-                            >
-                              {stock.price}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                color: "#4ade80",
-                                fontWeight: 800,
-                                fontSize: "0.8rem",
-                                mt: 0.2,
-                              }}
-                            >
-                              {stock.change}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      ))}
+                        );
+                      })}
                     </Paper>
                   </Reveal>
 
@@ -1205,67 +1274,79 @@ const LandingPage = () => {
                         </Typography>
                       </Box>
 
-                      {TOP_LOSERS.map((stock, index) => (
-                        <Box
-                          key={stock.name}
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            py: 1.5,
-                            borderBottom:
-                              index < TOP_LOSERS.length - 1
-                                ? `1px solid rgba(255,255,255,0.1)`
-                                : "none",
-                            "&:hover": { bgcolor: "rgba(255,255,255,0.05)" },
-                            px: 1,
-                            borderRadius: 1,
-                            transition: "bgcolor 0.2s",
-                          }}
-                        >
-                          <Box>
-                            <Typography
-                              sx={{
-                                fontWeight: 700,
-                                fontSize: "0.95rem",
-                                color: CREAM,
-                              }}
-                            >
-                              {stock.name}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                color: "rgba(255,255,255,0.6)",
-                                fontSize: "0.75rem",
-                                mt: 0.2,
-                              }}
-                            >
-                              {stock.desc}
-                            </Typography>
+                      {(losers.length > 0 ? losers : TOP_LOSERS).map((stock, index) => {
+                        const formattedPrice =
+                          typeof stock.price === "number"
+                            ? `₹${stock.price.toLocaleString("en-IN")}`
+                            : stock.price;
+                        const formattedChange =
+                          typeof stock.percentChange === "number"
+                            ? `${stock.percentChange > 0 ? "+" : ""}${stock.percentChange}%`
+                            : stock.change;
+                        const listLen = losers.length > 0 ? losers.length : TOP_LOSERS.length;
+
+                        return (
+                          <Box
+                            key={stock.symbol || stock.name || index}
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              py: 1.5,
+                              borderBottom:
+                                index < listLen - 1
+                                  ? `1px solid rgba(255,255,255,0.1)`
+                                  : "none",
+                              "&:hover": { bgcolor: "rgba(255,255,255,0.05)" },
+                              px: 1,
+                              borderRadius: 1,
+                              transition: "bgcolor 0.2s",
+                            }}
+                          >
+                            <Box>
+                              <Typography
+                                sx={{
+                                  fontWeight: 700,
+                                  fontSize: "0.95rem",
+                                  color: CREAM,
+                                }}
+                              >
+                                {stock.name}
+                              </Typography>
+                              <Typography
+                                sx={{
+                                  color: "rgba(255,255,255,0.6)",
+                                  fontSize: "0.75rem",
+                                  mt: 0.2,
+                                }}
+                              >
+                                {stock.desc || stock.symbol}
+                              </Typography>
+                            </Box>
+                            <Box sx={{ textAlign: "right" }}>
+                              <Typography
+                                sx={{
+                                  fontWeight: 800,
+                                  fontSize: "0.95rem",
+                                  color: CREAM,
+                                }}
+                              >
+                                {formattedPrice}
+                              </Typography>
+                              <Typography
+                                sx={{
+                                  color: "#f87171",
+                                  fontWeight: 800,
+                                  fontSize: "0.8rem",
+                                  mt: 0.2,
+                                }}
+                              >
+                                {formattedChange}
+                              </Typography>
+                            </Box>
                           </Box>
-                          <Box sx={{ textAlign: "right" }}>
-                            <Typography
-                              sx={{
-                                fontWeight: 800,
-                                fontSize: "0.95rem",
-                                color: CREAM,
-                              }}
-                            >
-                              {stock.price}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                color: "#f87171",
-                                fontWeight: 800,
-                                fontSize: "0.8rem",
-                                mt: 0.2,
-                              }}
-                            >
-                              {stock.change}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      ))}
+                        );
+                      })}
                     </Paper>
                   </Reveal>
                 </Box>
@@ -1460,12 +1541,12 @@ const LandingPage = () => {
                 },
               }}
             >
-              {NEWS.map((n, i) => (
-                <Reveal key={n.id} delay={i * 0.08}>
+              {(newsList.length > 0 ? newsList : NEWS).map((n, i) => (
+                <Reveal key={n._id || n.id || i} delay={i * 0.08}>
                   <Card
                     elevation={0}
                     component="a"
-                    href={n.url}
+                    href={n.url || n.link || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     sx={{
@@ -1493,7 +1574,10 @@ const LandingPage = () => {
                     >
                       <Box
                         component="img"
-                        src={n.img}
+                        src={
+                          n.img ||
+                          "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80"
+                        }
                         alt=""
                         loading="lazy"
                         sx={{
@@ -1506,7 +1590,7 @@ const LandingPage = () => {
                         }}
                       />
                       <Chip
-                        label={n.category}
+                        label={n.category || "Finance"}
                         size="small"
                         sx={{
                           position: "absolute",
@@ -1529,7 +1613,7 @@ const LandingPage = () => {
                           fontWeight: 500,
                         }}
                       >
-                        {n.date}
+                        {n.time || n.pubDate || n.date || "Recent"}
                       </Typography>
                       <Typography
                         component="h3"
@@ -1549,7 +1633,7 @@ const LandingPage = () => {
                           lineHeight: 1.5,
                         }}
                       >
-                        {n.description}
+                        {n.desc || n.description}
                       </Typography>
                     </Box>
                   </Card>
@@ -1558,6 +1642,167 @@ const LandingPage = () => {
             </Box>
           </Container>
         </Box>
+
+        {/* ------------------------------- UPCOMING IPOS ------------------------------ */}
+        {ipos.length > 0 && (
+          <Box
+            component="section"
+            id="ipos"
+            sx={{ ...section(band), py: { xs: 6, md: 8 } }}
+          >
+            <Container maxWidth="lg">
+              <Reveal sx={{ textAlign: "center", mb: 6 }}>
+                <Typography
+                  component="h2"
+                  sx={{
+                    ...heading,
+                    mb: 1,
+                    fontSize: { xs: "1.5rem", md: "2rem" },
+                    color: band.fg,
+                  }}
+                >
+                  Upcoming Indian IPOs
+                </Typography>
+                <Typography
+                  sx={{
+                    ...subHeading,
+                    fontSize: { xs: "0.9rem", md: "1rem" },
+                    maxWidth: 600,
+                    mx: "auto",
+                    color: hexToRgba(CREAM, 0.8),
+                  }}
+                >
+                  Track upcoming and recently listed Initial Public Offerings directly from our database.
+                </Typography>
+              </Reveal>
+
+              <Box
+                sx={{
+                  display: "grid",
+                  gap: 2.5,
+                  gridTemplateColumns: {
+                    xs: "1fr",
+                    sm: "repeat(2, 1fr)",
+                    md: "repeat(3, 1fr)",
+                  },
+                }}
+              >
+                {ipos.map((ipo, idx) => (
+                  <Reveal key={ipo._id || ipo.name || idx} delay={idx * 0.06}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        p: 2.5,
+                        bgcolor: "rgba(11, 15, 23, 0.75)",
+                        backdropFilter: "blur(12px)",
+                        border: "1px solid rgba(255, 255, 255, 0.12)",
+                        borderRadius: 1.5,
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-4px)",
+                          borderColor: PRIMARY_BLUE,
+                          boxShadow: `0 12px 28px ${hexToRgba(PRIMARY_BLUE, 0.25)}`,
+                        },
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "flex-start",
+                          mb: 1.5,
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontWeight: 800,
+                            fontSize: "1.05rem",
+                            color: CREAM,
+                          }}
+                        >
+                          {ipo.name}
+                        </Typography>
+                        <Chip
+                          label={ipo.status}
+                          size="small"
+                          sx={{
+                            height: 22,
+                            fontSize: "0.7rem",
+                            fontWeight: 700,
+                            bgcolor:
+                              ipo.status === "Upcoming"
+                                ? "rgba(16, 185, 129, 0.15)"
+                                : "rgba(156, 163, 175, 0.15)",
+                            color: ipo.status === "Upcoming" ? "#10b981" : "#9ca3af",
+                            border: `1px solid ${ipo.status === "Upcoming"
+                              ? "rgba(16, 185, 129, 0.4)"
+                              : "rgba(156, 163, 175, 0.3)"
+                              }`,
+                          }}
+                        />
+                      </Box>
+
+                      <Box
+                        sx={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: 1.5,
+                          mb: 1.5,
+                        }}
+                      >
+                        <Box>
+                          <Typography
+                            sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.75rem" }}
+                          >
+                            Open Date
+                          </Typography>
+                          <Typography
+                            sx={{ color: CREAM, fontWeight: 600, fontSize: "0.85rem", mt: 0.2 }}
+                          >
+                            {ipo.date}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ textAlign: "right" }}>
+                          <Typography
+                            sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.75rem" }}
+                          >
+                            Issue Size
+                          </Typography>
+                          <Typography
+                            sx={{ color: "#60a5fa", fontWeight: 700, fontSize: "0.85rem", mt: 0.2 }}
+                          >
+                            {ipo.size}
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Box
+                        sx={{
+                          pt: 1.5,
+                          borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography
+                          sx={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.75rem" }}
+                        >
+                          Price Band
+                        </Typography>
+                        <Typography
+                          sx={{ color: "#34d399", fontWeight: 800, fontSize: "0.9rem" }}
+                        >
+                          {ipo.price}
+                        </Typography>
+                      </Box>
+                    </Paper>
+                  </Reveal>
+                ))}
+              </Box>
+            </Container>
+          </Box>
+        )}
 
         {/* --------------------------- HOW IT WORKS -------------------------- */}
         <Box

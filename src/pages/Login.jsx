@@ -114,8 +114,9 @@ const Login = () => {
 
     try {
       setLoading(true);
+      const apiBase = import.meta.env.VITE_API_BASE_URL || "http://localhost:3002";
       const response = await axios.post(
-        "https://wealthnova-backend.onrender.com/api/auth/login",
+        `${apiBase}/api/auth/login`,
         loginData
       );
 

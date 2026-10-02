@@ -8,9 +8,6 @@ import {
   TextField,
   Grid,
   Divider,
-  Stack,
-  Card,
-  CardContent,
 } from "@mui/material";
 
 function SipCalculator() {
