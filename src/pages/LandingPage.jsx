@@ -635,11 +635,12 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchLandingData = async () => {
       try {
+        const apiBase = import.meta.env.VITE_API_BASE_URL || "https://wealthnova-backend.onrender.com";
         const [mktRes, glRes, newsRes, ipoRes] = await Promise.allSettled([
-          fetch("http://localhost:3002/api/market").then((r) => r.json()),
-          fetch("http://localhost:3002/api/market/gainers-losers").then((r) => r.json()),
-          fetch("http://localhost:3002/api/news?limit=8").then((r) => r.json()),
-          fetch("http://localhost:3002/api/ipo").then((r) => r.json()),
+          fetch(`${apiBase}/api/market`).then((r) => r.json()),
+          fetch(`${apiBase}/api/market/gainers-losers`).then((r) => r.json()),
+          fetch(`${apiBase}/api/news?limit=8`).then((r) => r.json()),
+          fetch(`${apiBase}/api/ipo`).then((r) => r.json()),
         ]);
 
         if (mktRes.status === "fulfilled" && mktRes.value.success && Array.isArray(mktRes.value.data) && mktRes.value.data.length > 0) {

@@ -19,7 +19,7 @@ import CurrencyBitcoinIcon from "@mui/icons-material/CurrencyBitcoin";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import BoltIcon from "@mui/icons-material/Bolt";
 
-const API_BASE = "http://localhost:3002";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://wealthnova-backend.onrender.com";
 const GREEN = "#10b981";
 const RED = "#ef4444";
 

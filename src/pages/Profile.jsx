@@ -42,7 +42,7 @@ import ErrorIcon from "@mui/icons-material/Error";
 import axios from "axios";
 
 // ---- axios instance (auto-attaches token, auto-logout on 401) ----
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3002";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://wealthnova-backend.onrender.com";
 
 const axiosInstance = axios.create({ baseURL: BASE_URL });
 

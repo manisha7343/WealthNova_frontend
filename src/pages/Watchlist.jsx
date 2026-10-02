@@ -92,9 +92,10 @@ export default function Watchlist() {
   const fetchStocks = async (query = "") => {
     try {
       setLoading(true);
+      const apiBase = import.meta.env.VITE_API_BASE_URL || "https://wealthnova-backend.onrender.com";
       const url = query.trim()
-        ? `http://localhost:3002/api/stocks/search?query=${encodeURIComponent(query.trim())}`
-        : `http://localhost:3002/api/stocks/search`;
+        ? `${apiBase}/api/stocks/search?query=${encodeURIComponent(query.trim())}`
+        : `${apiBase}/api/stocks/search`;
 
       const response = await fetch(url);
       const result = await response.json();

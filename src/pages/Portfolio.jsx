@@ -39,7 +39,7 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3002";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://wealthnova-backend.onrender.com";
 
 export default function Portfolio() {
   const [holdings, setHoldings] = useState([]);
